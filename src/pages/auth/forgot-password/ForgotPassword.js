@@ -1,14 +1,44 @@
-import './ForgotPassword.scss';
+import '@pages/auth/forgot-password/ForgotPassword.scss';
 import { FaArrowLeft } from 'react-icons/fa';
-import Input from '../../../components/input/Input';
-import Button from '../../../components/button/Button';
+import Input from '@components/input/Input';
+import Button from '@components/button/Button';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '../../../constants';
-import backgroundImage from '../../../assets/images/background.jpg';
+import { ROUTES } from '@root/constants';
+import backgroundImage from '@assets/images/background.jpg';
+import { useState } from 'react';
+import { authService } from '@services/api/auth/auth.service';
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+
+  const forgotPassword = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const result = await authService.forgotPassword({
+        email,
+      });
+
+      setIsLoading(false);
+      setEmail('');
+      setAlertType('alert-success');
+      setResponseMessage(result.data.message);
+    } catch (error) {
+      setIsLoading(false);
+      setAlertType('alert-error');
+      setResponseMessage(error?.response?.data.message);
+    }
+  };
+
   return (
-    <div className="container-wrapper" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div
+      className="container-wrapper"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
       <div className="environment">DEV</div>
       <div className="container-wrapper-auth">
         <div className="tabs forgot-password-tabs">
@@ -21,27 +51,30 @@ const ForgotPassword = () => {
 
             <div className="tab-item">
               <div className="auth-inner">
-                <div className="alerts alert-error" role="alert">
-                  Error message
-                </div>
+                {responseMessage && (
+                  <div className={`alerts ${alertType}`} role="alert">
+                    {responseMessage}
+                  </div>
+                )}
 
-                <form className="auth-form">
+                <form className="auth-form" onSubmit={forgotPassword}>
                   <div className="form-input-container">
                     <Input
                       id="email"
                       name="email"
                       type="text"
-                      value=""
+                      value={email}
                       labelText="Email"
                       placeholder="Enter Email"
-                      handleChange={() => {}}
+                      handleChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
 
                   <Button
-                    label="SIGNIN"
+                    label={`${isLoading ? 'FORGOT PASSWORD IN PROGRESS...' : 'FORGOT PASSWORD'}`}
                     className="auth-button button"
-                    disabled={true}
+                    disabled={!email}
+                    type="submit"
                   />
 
                   <Link to={ROUTES.AUTH}>
