@@ -49,7 +49,7 @@ const Login = () => {
       setIsLoading(false);
       setHasError(true);
       setAlertType('alert-error');
-      setErrorMessage(error?.response?.data.message);
+      setErrorMessage(error?.response?.data?.message);
     }
   };
 
@@ -78,6 +78,7 @@ const Login = () => {
             value={username}
             labelText="Username"
             placeholder="Enter Username"
+            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
             handleChange={(e) => setUsername(e.target.value)}
           />
           <Input
@@ -87,6 +88,7 @@ const Login = () => {
             value={password}
             labelText="Password"
             placeholder="Enter Password"
+            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
             handleChange={(e) => setPassword(e.target.value)}
           />
           <label className="checkmark-container" htmlFor="checkbox">
@@ -95,7 +97,7 @@ const Login = () => {
               name="checkbox"
               type="checkbox"
               value={keepLoggedIn}
-              handleChange={(e) => setKeepLoggedIn(e.target.value)}
+              handleChange={(e) => setKeepLoggedIn(e.target.checked)}
             />
             Keep me signed in
           </label>

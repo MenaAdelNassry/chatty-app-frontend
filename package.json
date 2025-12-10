@@ -8,14 +8,15 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.13.2",
+    "axios": "^0.27.2",
+    "history": "^5.3.0",
     "react": "^19.2.0",
     "react-app-rewired": "^2.2.1",
     "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
     "react-loading-skeleton": "^3.5.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.10.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "sass": "^1.94.2",
     "web-vitals": "^2.1.4"
@@ -27,8 +28,7 @@
     "prettier:check": "prettier --check 'src/**/*.{js,jsx,json}'",
     "prettier:fix": "prettier --write 'src/**/*.{js,jsx,json}'",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "test": "react-app-rewired test --coverage --forceExit --detectOpenHandles --watchAll=false"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
@@ -60,8 +61,50 @@
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "jest-canvas-mock": "^2.4.0",
+    "jest-canvas-mock": "^2.5.2",
+    "msw": "^0.44.2",
     "prettier": "^2.8.8",
-    "react-app-alias": "^2.2.2"
+    "react-app-alias": "^2.2.2",
+    "web-streams-polyfill": "^4.2.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/test/*.js?(x)",
+      "!**/node_modules/**"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "lcov"
+    ],
+    "moduleNameMapper": {
+      "@components/(.*)": [
+        "<rootDir>/src/components/$1"
+      ],
+      "@services/(.*)": [
+        "<rootDir>/src/services/$1"
+      ],
+      "@hooks/(.*)": [
+        "<rootDir>/src/hooks/$1"
+      ],
+      "@mocks/(.*)": [
+        "<rootDir>/src/mocks/$1"
+      ],
+      "@pages/(.*)": [
+        "<rootDir>/src/pages/$1"
+      ],
+      "@redux/(.*)": [
+        "<rootDir>/src/redux-toolkit/$1"
+      ],
+      "@assets/(.*)": [
+        "<rootDir>/src/assets/$1"
+      ],
+      "@colors/(.*)": [
+        "<rootDir>/src/colors/$1"
+      ],
+      "@root/(.*)": [
+        "<rootDir>/src/$1"
+      ]
+    }
   }
 }

@@ -66,6 +66,7 @@ const ForgotPassword = () => {
                       value={email}
                       labelText="Email"
                       placeholder="Enter Email"
+                      style={{ border: alertType === 'alert-error' ? '1px solid #fa9b8a' : '' }}
                       handleChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
