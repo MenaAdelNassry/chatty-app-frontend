@@ -68,6 +68,7 @@ const ResetPassword = () => {
                       value={password}
                       labelText="New Password"
                       placeholder="New Password"
+                      style={{ border: alertType === 'alert-error' ? '1px solid #fa9b8a' : '' }}
                       handleChange={(e) => setPassword(e.target.value)}
                     />
                     <Input
@@ -77,14 +78,10 @@ const ResetPassword = () => {
                       value={confirmPassword}
                       labelText="Confirm Password"
                       placeholder="Confirm Password"
+                      style={{ border: alertType === 'alert-error' ? '1px solid #fa9b8a' : '' }}
                       handleChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </div>
-                  <Button
-                    label="RESET PASSWORD"
-                    className="auth-button button"
-                    disabled={false}
-                  />
                   <Button
                     label={`${isLoading ? 'RESET PASSWORD IN PROGRESS...' : 'RESET PASSWORD'}`}
                     className="auth-button button"

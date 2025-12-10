@@ -76,6 +76,7 @@ const Register = () => {
             value={username}
             labelText="Username"
             placeholder="Enter Username"
+            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
             handleChange={(e) => {
               setUsername(e.target.value);
             }}
@@ -87,6 +88,7 @@ const Register = () => {
             value={email}
             labelText="Email"
             placeholder="Enter Email"
+            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
             handleChange={(e) => {
               setEmail(e.target.value);
             }}
@@ -98,6 +100,7 @@ const Register = () => {
             value={password}
             labelText="Password"
             placeholder="Enter Password"
+            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
             handleChange={(e) => {
               setPassword(e.target.value);
             }}

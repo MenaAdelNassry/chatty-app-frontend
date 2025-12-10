@@ -11,6 +11,7 @@ const Input = (props) => {
     value,
     placeholder,
     handleChange,
+    style
   } = props;
 
   return (
@@ -30,6 +31,7 @@ const Input = (props) => {
           className={`form-input ${className}`} // if className exist will override
           onChange={handleChange}
           autoComplete="false"
+          style={style}
         />
       </div>
   );
@@ -44,6 +46,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   className: PropTypes.string,
   handleChange: PropTypes.func,
+  style: PropTypes.object
 };
 
 export default Input;
