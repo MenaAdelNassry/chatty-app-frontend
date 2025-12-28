@@ -7,7 +7,11 @@ const useDetectOutsideClick = (ref, initialValue) => {
     if(!isActive) return;
 
     const listener = (event) => {
+      console.log("If is contain: ", ref.current.contains(event.target))
+      console.log(ref.current)
+      console.log(event.target)
       if(ref.current && !ref.current.contains(event.target)) {
+        console.log("logged")
         setIsActive(false);
       }
     }

@@ -1,3 +1,4 @@
+import { FaUserAlt, FaSignOutAlt } from 'react-icons/fa';
 import blessed from '@assets/feelings/blessed.jpg';
 import excited from '@assets/feelings/excited.jpg';
 import happy from '@assets/feelings/happy.jpg';
@@ -24,12 +25,13 @@ import {
   FaUserPlus,
   FaUsers
 } from 'react-icons/fa';
+import { ROUTES } from '@root/constants/index';
 
 export const sideBarItems = [
   {
     index: 1,
     name: 'Streams',
-    url: '/app/social/streams',
+    url: ROUTES.SOCIAL_STREAMS,
     iconName: 'FaNewspaper'
   },
   {
@@ -259,3 +261,18 @@ export const tabItems = (showPassword, showNotification) => {
   ];
   return items;
 };
+
+export const settingsItems = [
+  {
+    id: 'profile',
+    title: 'My Profile',
+    subTitle: 'View personal profile',
+    icon: <FaUserAlt color='#50b5ff' size={30} />
+  },
+  {
+    id: 'logout',
+    title: 'Sign out',
+    subTitle: 'Separate from device',
+    icon: <FaSignOutAlt size={20} />
+  }
+];
