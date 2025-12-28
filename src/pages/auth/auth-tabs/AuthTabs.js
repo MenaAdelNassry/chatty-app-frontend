@@ -1,17 +1,31 @@
 import '@pages/auth/auth-tabs/AuthTabs.scss';
 import backgroundImage from '@assets/images/background.jpg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {Register, Login} from '@pages/auth/index';
+import { Utils } from '@services/utils/utils.services';
+import useLocalStorage from '@hooks/useLocalStorage';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@root/constants';
 
 const AuthTabs = () => {
   const [isLogin, setIsLogin] = useState(true);
+
+  const keepLoggedIn = useLocalStorage("keepLoggedIn", "get");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(keepLoggedIn) {
+      navigate(ROUTES.SOCIAL_STREAMS);
+    }
+  }, [keepLoggedIn, navigate]);
 
   return (
     <div
       className="container-wrapper"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="environment">DEV</div>
+      <div className="environment">{ Utils.appEnvironment() }</div>
       <div className="container-wrapper-auth">
         <div className="tabs">
           <div className="tabs-auth">

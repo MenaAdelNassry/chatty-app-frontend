@@ -1,5 +1,5 @@
-import { addUser, clearUser } from '@redux/reducers/user/user.reducer';
-import { avatarColors } from '@root/constants/index'
+import { clearUser } from '@redux/reducers/user/user.reducer';
+import { avatarColors } from '@root/constants/index';
 
 export class Utils {
   static getRandomAvatarColor() {
@@ -7,7 +7,7 @@ export class Utils {
     return avatarColors[randomIndex];
   }
 
-  static generateAvatarImage(text, backgroundColor, foregroundColor='white') {
+  static generateAvatarImage(text, backgroundColor, foregroundColor = 'white') {
     const canavas = document.createElement('canvas');
     const context = canavas.getContext('2d');
 
@@ -27,17 +27,45 @@ export class Utils {
     return canavas.toDataURL('image/png');
   }
 
-  static dispatchUser(dispatch, setUser, result, pageReload) {
-    pageReload(true);
-    dispatch(addUser({ token: result.data.token, profile: result.data.user }));
-    setUser(result.data.user);
-  }
-
-  static clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn }) {
+  static clearStore({
+    dispatch,
+    deleteStorageUsername,
+    setLoggedIn,
+  }) {
     dispatch(clearUser());
     // dispatch clear notification action
     deleteStorageUsername();
-    deleteSessionPageReload();
     setLoggedIn(false);
+  }
+
+  static appEnvironment() {
+    const env = process.env.REACT_APP_ENVIRONMENT;
+    if (env === 'development') {
+      return 'DEV';
+    } else if (env === 'staging') {
+      return 'STG';
+    }
+  }
+
+  static generateString(length) {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
+  static mapSettingsDropdownItems() {
+    const items = [];
+    const item = {
+      topText: "My Profile",
+      subText: "View personal profile"
+    }
+
+    items.push(item);
+    return items
   }
 }
