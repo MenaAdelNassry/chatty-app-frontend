@@ -1,55 +1,34 @@
-import { useRef, useState } from 'react'
-import "@pages/social/streams/Streams.scss"
+import { useEffect } from 'react';
+import '@pages/social/streams/Streams.scss';
 import Suggestions from '@components/suggestions/Suggestions';
-import StreamsSkeleton from '@pages/social/streams/StreamsSkeleton';
-import useEffectOnce from '@hooks/useEffectOnce';
 import { useDispatch } from 'react-redux';
 import { getUserSuggestions } from '@redux/api/suggestions';
+import PostForm from '@components/posts/post-form/PostForm';
+import Posts from '@components/posts/Posts';
 
 const Streams = () => {
-  const bodyRef = useRef(null);
-  const bottomLineRef = useRef(null);
-
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
-  console.log(loading)
 
-  useEffectOnce(() => {
-    const fetchData = async () => {
-      try {
-        await Promise.all([
-          dispatch(getUserSuggestions()),
-          new Promise((resolve) => setTimeout(resolve, 3000))
-        ]);
-
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  });
-
-  console.log(loading)
-  if(loading) {
-    return <StreamsSkeleton />
-  }
+  useEffect(() => {
+    dispatch(getUserSuggestions());
+  }, [dispatch]);
 
   return (
-    <div className='streams' data-testid="streams">
-      <div className='streams-content'>
-        <div className='streams-post' ref={bodyRef} style={{ backgroundColor: "white" }}>
-          <div>Post Form</div>
-          <div>Post Items</div>
-          <div ref={bottomLineRef} style={{ marginBottom: "50px", height: "50px" }}></div>
-        </div>
-        <div className='streams-suggestions'>
-          <Suggestions />
-        </div>
+    <div className="streams-container" data-testid="streams">
+      {/* 1. Middle column: Posts (we're still working on them) */}
+      <div className="streams-content">
+
+        <PostForm />
+        <Posts />
+
+      </div>
+
+      {/* 2. Right column: Suggestions */}
+      <div className="streams-suggestions">
+        <Suggestions />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Streams
+export default Streams;

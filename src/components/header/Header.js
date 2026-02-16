@@ -1,250 +1,348 @@
-import { useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import logo from '@assets/images/logo.svg';
 import {
   FaCaretDown,
   FaCaretUp,
   FaRegBell,
+  FaRegBellSlash,
   FaRegEnvelope,
+  FaSearch,
 } from 'react-icons/fa';
-
-// Assets & Styles
-import logo from '@assets/images/logo.svg';
-import '@components/header/Header.scss';
-
-// Components
 import Avatar from '@components/avatar/Avatar';
 import Dropdown from '@components/dropdown/Dropdown';
 import MessageSidebar from '@components/message-sidebar/MessageSidebar';
-import HeaderSkeleton from '@components/header/HeaderSkeleton';
-
-// Hooks & Services
-import useDetectOutsideClick from '@hooks/useDetectOutsideClick';
-import useLocalStorage from '@hooks/useLocalStorage';
-import { Utils } from '@services/utils/utils.services';
+import { ROUTES, settingsItems } from '@root/constants';
+import useHeader from '@hooks/social/header/useHeader';
+import '@components/header/Header.scss';
+import DropdownItem from '@components/dropdown/DropdownItem';
+import NotificationPreview from '@components/NotificationPreview/NotificationPreview';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import useDebounce from '@hooks/useDebounce';
 import { userService } from '@services/api/user/user.service';
-import { ProfileUtils } from '@services/utils/profile-utils.services';
-import { ROUTES } from '@root/constants';
-import { settingsItems } from '@root/constants';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
+  const {
+    profile,
+    environment,
+    envColor,
+    dropdownState,
+    refs,
+    actions,
+    notifications,
+    unreadNotificationCount,
+  } = useHeader();
+
+  const { isNotificationActive, isMessageActive, isSettingsActive } =
+    dropdownState;
+  const { notificationRef, messageRef, settingsRef } = refs;
+  const {
+    toggleDropdown,
+    onLogout,
+    onNavigateToProfile,
+    onNavigateHome,
+    onMarkAsRead,
+  } = actions;
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { profile } = useSelector((state) => state.user);
 
-  const isLoading = !profile;
+  // --- Search Logic Starts Here ---
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
+  const searchRef = useRef(null);
 
-  // 1. Environment Logic (Simple & Direct)
-  const environment = Utils.appEnvironment();
-  const backgroundColor =
-    environment === 'DEV' ? '#50b5ff' : environment === 'STG' ? '#e9710f' : '';
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  // 2. Refs for Outside Click
-  const messageRef = useRef(null);
-  const notificationRef = useRef(null);
-  const settingsRef = useRef(null);
+  const { conversations } = useSelector((state) => state.chat);
+  const messageCount = conversations.reduce((sum, convo) => {
+    const myUnread = convo.unreadCounts?.[profile?._id] || 0;
+    return sum + myUnread;
+  }, 0);
+  console.log(messageCount)
+  const messageNotifications = conversations
+    .filter((convo) => convo.lastMessage)
+    .slice(0, 10);
 
-  // 3. States
-  const [isMessageActive, setIsMessageActive] = useDetectOutsideClick(
-    messageRef,
-    false
-  );
-  const [isNotificationActive, setIsNotificationActive] = useDetectOutsideClick(
-    notificationRef,
-    false
-  );
-  const [isSettingsActive, setIsSettingsActive] = useDetectOutsideClick(
-    settingsRef,
-    false
-  );
+  const openChatPage = (convo) => {
+    toggleDropdown('messages');
 
-  // Storage Helpers
-  const [deleteStorageUsername] = useLocalStorage('username', 'delete');
-  const [setLoggedIn] = useLocalStorage('keepLoggedIn', 'set');
+    const otherParticipant = convo.participants.find(
+      (p) => p._id !== profile?._id
+    );
+    const targetId = otherParticipant?._id;
 
-  // ***** Methods *****
-  const toggleDropdown = (type) => {
-    if (type === 'notification') {
-      setIsNotificationActive((prev) => !prev);
-      setIsMessageActive(false);
-      setIsSettingsActive(false);
-    } else if (type === 'messages') {
-      setIsMessageActive((prev) => !prev);
-      setIsNotificationActive(false);
-      setIsSettingsActive(false);
-    } else if (type === 'settings') {
-      setIsSettingsActive((prev) => !prev);
-      setIsNotificationActive(false);
-      setIsMessageActive(false);
+    const url = `/app/social/chat/messages?id=${targetId}&cid=${convo._id}`;
+    navigate(url);
+  };
+
+  useEffect(() => {
+    const searchForUsers = async () => {
+      if (debouncedSearchTerm) {
+        setIsSearching(true);
+        try {
+          const response = await userService.searchUsers(debouncedSearchTerm);
+          setSearchResults(response.data.users);
+          setShowSearchDropdown(true);
+        } catch (error) {
+          setSearchResults([]);
+        }
+        setIsSearching(false);
+      } else {
+        setSearchResults([]);
+        setShowSearchDropdown(false);
+        setIsSearching(false);
+      }
+    };
+
+    searchForUsers();
+  }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSearchDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSettingsItemClick = (item) => {
+    if (item.id === 'logout') {
+      onLogout();
+    } else if (item.id === 'profile') {
+      onNavigateToProfile();
+    } else if (item.id === 'settings') {
+      toggleDropdown('settings');
+      navigate('/app/social/settings');
     }
   };
 
-  const onLogout = async () => {
-    try {
-      Utils.clearStore({ dispatch, deleteStorageUsername, setLoggedIn });
-      await userService.logoutUser();
-      navigate(ROUTES.AUTH);
-    } catch (err) {
-      console.error(err);
-    }
+  const onSearchSubmit = (e) => {
+    if (e.key && e.key !== 'Enter') return;
+
+    setShowSearchDropdown(false);
+    navigate({
+      pathname: ROUTES.SOCIAL_SEARCH,
+      search: createSearchParams({ q: searchTerm }).toString(),
+    });
   };
 
-  const onNavigateToProfile = () => {
-    ProfileUtils.navigateToProfile(profile, navigate);
-    setIsSettingsActive(false);
+  const navigateToProfileResult = (id, username) => {
+    navigate(`/app/social/profile/${username}/${id}`);
+    setShowSearchDropdown(false);
+    setSearchTerm('');
   };
 
   return (
-    <>
-      {isLoading ? (
-        <HeaderSkeleton />
-      ) : (
-        <div className="header-nav-wrapper" data-testid="header-wrapper">
-          <div className="header-navbar">
-            {/* Logo Section */}
-            <div
-              className="header-image"
-              data-testid="header-image"
-              onClick={() => navigate(ROUTES.SOCIAL_STREAMS)}
-            >
-              <img src={logo} alt="Chatty Logo" className="img-fluid" />
-              <div className="app-name">
-                Chatty
-                {environment && (
-                  <span className="environment" style={{ backgroundColor }}>
-                    {environment}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Mobile Toggle (UI Only for now) */}
-            <div className="header-menu-toggle">
-              <span className="bar"></span>
-              <span className="bar"></span>
-              <span className="bar"></span>
-            </div>
-
-            {/* Navigation Items */}
-            <ul className="header-nav">
-              {/* --- A. Notifications Icon --- */}
-              <li className="header-nav-item active-item" ref={notificationRef}>
-                <span
-                  className="header-list-name"
-                  onClick={() => toggleDropdown('notification')}
-                >
-                  <FaRegBell className="header-list-icon" />
-                  <span
-                    className="bg-danger-dots dots"
-                    data-testid="notification-dots"
-                  ></span>
-                </span>
-
-                {isNotificationActive && (
-                  <ul className="dropdown-ul">
-                    <li className="dropdown-li">
-                      <Dropdown
-                        height={300}
-                        style={{ right: '250px', top: '20px' }}
-                        title="Notifications"
-                        subTitle={0} // Notifications Count
-                      >
-                        <p className="empty-message">No notifications</p>
-                        {/* هنا مستقبلاً هنحط NotificationItem زي ما عملنا في Playground */}
-                      </Dropdown>
-                    </li>
-                  </ul>
-                )}
-              </li>
-
-              {/* --- B. Messages Icon --- */}
-              <li className="header-nav-item active-item" ref={messageRef}>
-                <span
-                  className="header-list-name"
-                  onClick={() => toggleDropdown('messages')}
-                >
-                  <FaRegEnvelope className="header-list-icon" />
-                  <span
-                    className="bg-danger-dots dots"
-                    data-testid="messages-dots"
-                  ></span>
-                </span>
-                {/* Message Sidebar */}
-                {isMessageActive && (
-                  <div>
-                    <MessageSidebar
-                      profile={profile}
-                      messageCount={0}
-                      messageNotifications={[]}
-                      openChatPage={() => {}}
-                    />
-                  </div>
-                )}
-              </li>
-
-              {/* --- C. Settings / Profile --- */}
-              <li className="header-nav-item" ref={settingsRef}>
-                <span
-                  className="header-list-name profile-image"
-                  onClick={() => toggleDropdown('settings')}
-                >
-                  <Avatar
-                    name={profile?.username}
-                    bgColor={profile?.avatarColor}
-                    textColor="#ffffff"
-                    size={40}
-                    avatarSrc={profile?.profilePicture}
-                  />
-                </span>
-                <span
-                  className="header-list-name profile-name"
-                  onClick={() => toggleDropdown('settings')}
-                >
-                  {profile?.username}
-                  {isSettingsActive ? (
-                    <FaCaretUp className="header-list-icon caret" />
-                  ) : (
-                    <FaCaretDown className="header-list-icon caret" />
-                  )}
-                </span>
-
-                {isSettingsActive && (
-                  <ul className="dropdown-ul">
-                    <li className="dropdown-li">
-                      <Dropdown
-                        height={300}
-                        style={{ right: '150px', top: '40px' }}
-                        title="Settings"
-                      >
-                        {settingsItems.map((item, i) => (
-                          <div
-                            key={item.id}
-                            className="social-sub-card"
-                            onClick={
-                              item.id === 'logout'
-                                ? onLogout
-                                : onNavigateToProfile
-                            }
-                            style={{ marginTop: i === 0 ? "10px" : "" }}
-                          >
-                            <div className="content-avatar">{item.icon}</div>
-                            <div className="content-body">
-                              <h6 className="title">{item.title}</h6>
-                              <p className="subtext">{item.subTitle}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </Dropdown>
-                    </li>
-                  </ul>
-                )}
-              </li>
-            </ul>
+    <div className="header-nav-wrapper" data-testid="header-wrapper">
+      <div className="header-navbar">
+        {/* 1. Logo Section */}
+        <div
+          className="header-image"
+          data-testid="header-image"
+          onClick={onNavigateHome}
+        >
+          <img src={logo} alt="Chatty Logo" className="img-fluid" />
+          <div className="app-name">
+            Chatty
+            {environment && (
+              <span
+                className="environment"
+                style={{ backgroundColor: envColor }}
+              >
+                {environment}
+              </span>
+            )}
           </div>
         </div>
-      )}
-      {/* 1. Main Navbar */}
-    </>
+
+        {/* 2. Search Section */}
+        {/* 🔥🔥 Search Section 🔥🔥 */}
+        <div className="header-search-wrapper" ref={searchRef}>
+          <div className="search-bar">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onFocus={() => {
+                if (searchTerm) setShowSearchDropdown(true);
+              }}
+            />
+          </div>
+
+          {/* Dropdown Results */}
+          {showSearchDropdown && searchTerm && (
+            <div className="search-dropdown">
+              {isSearching ? (
+                <div className="dropdown-loading">Searching...</div>
+              ) : (
+                <ul className="search-results-list">
+                  {searchResults.length > 0 ? (
+                    <>
+                      {searchResults.map((user) => (
+                        <li
+                          key={user._id}
+                          onClick={() =>
+                            navigateToProfileResult(user._id, user.username)
+                          }
+                        >
+                          <Avatar
+                            name={user.username}
+                            bgColor={user.avatarColor}
+                            textColor="#ffffff"
+                            size={40}
+                            avatarSrc={user.profilePicture}
+                          />
+                          <span className="username">{user.username}</span>
+                        </li>
+                      ))}
+                      <li className="see-all-btn" onClick={onSearchSubmit}>
+                        See all results for "{searchTerm}"
+                      </li>
+                    </>
+                  ) : (
+                    <div className="dropdown-empty">No people found</div>
+                  )}
+                </ul>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* 3. Navigation Items */}
+        <ul className="header-nav">
+          {/* --- Notifications Icon --- */}
+          <li className="header-nav-item active-item" ref={notificationRef}>
+            <span
+              className="header-list-name"
+              onClick={() => toggleDropdown('notification')}
+            >
+              <FaRegBell className="header-list-icon" />
+              {unreadNotificationCount > 0 && (
+                <span
+                  className="bg-danger-dots"
+                  data-testid="notification-dots"
+                >{unreadNotificationCount}</span>
+              )}
+            </span>
+
+            {isNotificationActive && (
+              <ul className="dropdown-ul">
+                <li className="dropdown-li">
+                  <Dropdown
+                    height={300}
+                    style={{ right: '0' }} // SCSS handles relative positioning now
+                    title="Notifications"
+                    subTitle={unreadNotificationCount}
+                  >
+                    {notifications.length > 0 ? (
+                      <div className="notifications-container">
+                        {notifications.map((notification) => (
+                          <NotificationPreview
+                            key={notification._id}
+                            notification={notification}
+                            onMarkAsRead={() => onMarkAsRead(notification)}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      // Empty State Design
+                      <div className="empty-state">
+                        <FaRegBellSlash className="empty-icon" />
+                        <p className="empty-message">
+                          You have no notifications
+                        </p>
+                      </div>
+                    )}
+                  </Dropdown>
+                </li>
+              </ul>
+            )}
+          </li>
+
+          {/* --- Messages Icon --- */}
+          <li className="header-nav-item active-item" ref={messageRef}>
+            <span
+              className="header-list-name"
+              onClick={() => toggleDropdown('messages')}
+            >
+              <FaRegEnvelope className="header-list-icon" />
+              {messageCount > 0 && (
+                <span className="bg-danger-dots" data-testid="messages-dots">
+                  {messageCount}
+                </span>
+              )}
+            </span>
+
+            {isMessageActive && (
+              <div className="dropdown-ul">
+                <MessageSidebar
+                  profile={profile}
+                  messageCount={messageCount}
+                  messageNotifications={messageNotifications}
+                  openChatPage={openChatPage}
+                />
+              </div>
+            )}
+          </li>
+
+          {/* --- Settings / Profile --- */}
+          <li className="header-nav-item" ref={settingsRef}>
+            <span
+              className="header-list-name profile-image"
+              onClick={() => toggleDropdown('settings')}
+            >
+              <Avatar
+                name={profile?.username}
+                bgColor={profile?.avatarColor}
+                textColor="#ffffff"
+                size={40}
+                avatarSrc={profile?.profilePicture}
+              />
+            </span>
+            <span
+              className="header-list-name profile-name"
+              onClick={() => toggleDropdown('settings')}
+            >
+              {profile?.username}
+              {isSettingsActive ? (
+                <FaCaretUp className="caret" />
+              ) : (
+                <FaCaretDown className="caret" />
+              )}
+            </span>
+
+            {isSettingsActive && (
+              <ul className="dropdown-ul">
+                <li className="dropdown-li">
+                  <Dropdown
+                    title="Settings"
+                    height={300}
+                    style={{ right: '0' }}
+                  >
+                    {settingsItems.map((item) => (
+                      <DropdownItem
+                        key={item.id}
+                        title={item.title}
+                        subTitle={item.subTitle}
+                        icon={item.icon}
+                        onClick={() => handleSettingsItemClick(item)}
+                      />
+                    ))}
+                  </Dropdown>
+                </li>
+              </ul>
+            )}
+          </li>
+        </ul>
+      </div>
+    </div>
   );
 };
 

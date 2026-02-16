@@ -1,0 +1,270 @@
+.profile-header-wrapper {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 20px;
+  position: relative;
+
+  // --- Cover Image ---
+  .cover-container {
+    height: 350px; // ارتفاع الكفر
+    background-size: cover;
+    // background-position: center;
+    background-position: center 30%;
+    position: relative;
+    background-color: #ddd; // لون مؤقت لو مفيش صورة
+
+    // --- Mobile Responsive ---
+    // مهم جداً: على الموبايل العرض بيقل، فلازم نقلل الطول عشان الصورة متتقصش جامد
+    @media (max-width: 768px) {
+      // تابلت
+      height: 280px;
+    }
+
+    @media (max-width: 480px) {
+      // موبايل صغير
+      height: 180px;
+    }
+
+    .edit-cover-btn {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.3s;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.8);
+      }
+    }
+  }
+
+  // --- Info Container ---
+  .profile-info-container {
+    padding: 0 30px 30px; // مسافة من الجوانب وتحت
+    position: relative;
+    display: flex;
+    flex-direction: column; // عشان نرص العناصر تحت بعض
+
+    // --- Avatar ---
+    .avatar-wrapper {
+      width: 150px;
+      height: 150px;
+      margin-top: -75px; // 👈 ده اللي بيطلعه فوق الكفر للنص
+      margin-bottom: 15px;
+      position: relative; // عشان زرار الكاميرا
+
+      .avatar-border {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 4px solid white; // البرواز الأبيض
+        background: white;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .edit-avatar-btn {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: #f0f2f5;
+        color: #333;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+          background: #e4e6eb;
+        }
+      }
+    }
+
+    // --- Name & Bio ---
+    .name-section {
+      margin-top: 10px;
+
+      // 🔥 تنسيق الصف اللي فيه الاسم والزرار
+      .name-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; // الاسم شمال والزرار يمين
+        flex-wrap: wrap; // عشان في الموبايل ينزلوا تحت بعض
+        gap: 15px;
+
+        .fullname {
+          margin: 0;
+          font-size: 28px;
+          font-weight: 800;
+          color: #1c1e21;
+        }
+
+        // 🔥 تنسيق زرار Edit Profile
+        .edit-profile-btn,
+        .btn-action {
+          background-color: #e4e6eb; // رمادي فاتح (زي فيسبوك)
+          color: #050505;
+          border: none;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: #d8dadf; // أغمق سنة لما تقف عليه
+          }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
+
+          svg {
+            font-size: 14px;
+          }
+
+          &.btn-follow {
+            background-color: #1877f2;
+            color: white;
+
+            &:hover {
+              background-color: #166fe5;
+            }
+          }
+
+          // ستايل زرار Following (رمادي)
+          &.btn-following {
+            background-color: #e4e6eb;
+            color: #050505;
+            border: 1px solid transparent;
+
+            // لما نقف عليه يقلب أحمر (Unfollow)
+            &:hover {
+              background-color: #ffebeb;
+              color: #d32f2f;
+              border-color: #ffcdd2;
+            }
+          }
+        }
+      }
+
+      .quote {
+        margin: 5px 0;
+        color: #65676b;
+        font-style: italic;
+      }
+
+      .socials {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+
+        .social-icon {
+          font-size: 20px;
+          color: #65676b;
+
+          &:hover {
+            color: var(--primary-1);
+          }
+
+          &.facebook:hover {
+            color: #1877f2;
+          }
+
+          &.twitter:hover {
+            color: #1da1f2;
+          }
+
+          &.instagram:hover {
+            color: #c32aa3;
+          }
+
+          &.youtube:hover {
+            color: #ff0000;
+          }
+        }
+      }
+    }
+
+    // --- Details (Row Layout) ---
+    .details-section {
+      margin-top: 15px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #65676b;
+        font-size: 14px;
+
+        .icon {
+          color: #8a8d91;
+        }
+      }
+    }
+  }
+
+  // --- Mobile Responsive ---
+  @media (max-width: 600px) {
+    .profile-info-container {
+      align-items: center;
+      text-align: center; // سنتر كل حاجة في الموبايل
+
+      .avatar-wrapper {
+        margin-top: -50px;
+        width: 100px;
+        height: 100px;
+      }
+
+      // صغر الصورة
+      .details-section {
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// Mobile Responsive
+@media (max-width: 600px) {
+  .profile-info-container .name-section .name-row {
+    justify-content: center; // سنتر في الموبايل
+
+    .fullname {
+      width: 100%;
+      text-align: center;
+    }
+  }
+}
+
+.btns-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

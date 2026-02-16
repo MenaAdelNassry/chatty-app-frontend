@@ -1,21 +1,23 @@
-import { useCallback, useEffect } from 'react';
+import { useRef, useCallback } from 'react';
 
-const useInfiniteScroll = (bodyRef, bottomLineRef, callback) => {
-  const handleScroll = useCallback(() => {
-    const containerHeight = bodyRef.current.getBoundingClientRect().height;
-    const { top: bottomLineTop } =
-      bottomLineRef.current.getBoundingClientRect();
+const useInfiniteScroll = (callback) => {
+  const observer = useRef(null);
 
-    if (bottomLineTop <= containerHeight) {
-      callback();
-    }
-  }, [bodyRef, bottomLineRef, callback]);
+  const lastElementRef = useCallback((node) => {
+    if (observer.current) observer.current.disconnect();
 
-  useEffect(() => {
-    bodyRef?.current.addEventListener('scroll', handleScroll, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return () => bodyRef.current.removeEventListener('scroll', handleScroll, true);
-  }, [handleScroll, bodyRef]);
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log('Last element visible! Loading more...');
+        callback();
+      }
+    });
+
+    // 4. لو العنصر موجود (node)، راقبه
+    if (node) observer.current.observe(node);
+  }, [callback]);
+
+  return lastElementRef;
 };
 
 export default useInfiniteScroll;

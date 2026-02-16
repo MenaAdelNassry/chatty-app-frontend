@@ -1,6 +1,10 @@
 .form-row {
   margin-bottom: 1rem;
 
+  .input-wrapper {
+    position: relative; 
+  }
+
   .form-label {
     display: block;
     font-size: var(--small-tex);
@@ -22,5 +26,27 @@
     border-radius: 0.25rem;
     outline: 0;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &.input-error {
+      border-color: #e74c3c !important;
+      background-color: #fdf2f2;
+    }
+  }
+
+  .eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+  }
+
+  .error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+    font-weight: 600;
   }
 }

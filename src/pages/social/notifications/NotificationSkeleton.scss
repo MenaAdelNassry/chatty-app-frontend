@@ -1,0 +1,57 @@
+.notification-skeleton-container {
+  // الكونتينر الرئيسي (غالباً بيكون بوكس أبيض في نص الصفحة)
+  background-color: var(--white-1, #FFFFFF);
+  border-radius: 8px; // حواف ناعمة
+  padding: 25px;
+  height: 100%; // يملأ المساحة المتاحة
+  margin: 25px 0;
+
+  .skeleton-header {
+    margin-bottom: 25px;
+    // مسافة تحت العنوان
+  }
+
+  .skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; // مسافة بين كل إشعار
+  }
+
+  .skeleton-item {
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--white-4, #e0e3eb); // خط فاصل خفيف
+
+    &:last-child {
+      border-bottom: none; // شيل الخط من آخر واحد
+    }
+
+    .item-left {
+      margin-right: 15px;
+      // مسافة بين الصورة والكلام
+    }
+
+    .item-content {
+      flex: 1; // ياخد باقي المساحة
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .item-right {
+      margin-left: 15px;
+    }
+  }
+}
+
+// Mobile Responsive
+@media (max-width: 500px) {
+  .notification-skeleton-container {
+    padding: 15px;
+
+    .item-right {
+      display: none;
+    }
+  }
+}

@@ -1,78 +1,80 @@
-@mixin sidebar-styles {
+@import '@assets/scss/mixins.scss';
+
+@mixin active-sidebar-style {
   background-color: var(--white-1);
-  border: 1px solid var(--white-2);
-  color: var(--dark-blue-2);
-  border-radius: 50px;
-  text-decoration: none;
+  color: var(--primary-1);
+  font-weight: 700;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .app-side-menu {
   background-color: var(--white-10);
   box-shadow: 1px 5px 5px var(--gray-16);
-  height: 100vh;
+  overflow-y: auto;
+  height: 100%;
+  @include custom-scrollbar(4px);
 
   .side-menu {
-    padding: 2rem 1.5rem;
+    padding: 20px 10px;
 
     .list-unstyled {
-      margin: 0;
+      list-style: none;
       padding: 0;
-      width: 100%;
+      margin: 0;
 
       li {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        width: 100%;
-        padding-bottom: 0.6rem;
+        margin-bottom: 8px;
+        cursor: pointer;
 
         .sidebar-link {
           display: flex;
-          justify-content: flex-start;
           align-items: center;
-          width: 85%;
-          text-decoration: none;
-          border: 1px solid transparent;
-          padding: 0.6rem 1.5rem;
-          cursor: pointer;
+          padding: 12px 20px;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          color: var(--gray-13);
 
+          // Hover Effect
           &:hover {
-            @include sidebar-styles;
+            background-color: rgba(255, 255, 255, 0.5);
+            color: var(--primary-1);
+            transform: translateX(5px);
 
-            .menu-icon {
-              .icon {
-                color: var(--primary-1);
-              }
-            }
-          }
-        }
-
-        .active {
-          @include sidebar-styles;
-
-          .menu-icon {
-            .icon {
+            .menu-icon .icon {
               color: var(--primary-1);
             }
           }
-        }
 
-        .menu-icon {
-          margin-top: 5px;
-          .icon {
-            color: var(--gray-13);
-            font-weight: 500;
-            width: 20px;
+          // Active State
+          &.active {
+            @include active-sidebar-style;
+
+            .menu-icon .icon {
+              color: var(--primary-1);
+            }
+
+            span {
+              color: var(--primary-1);
+            }
           }
-        }
 
-        .menu-link {
-          padding-left: 0.8rem;
+          .menu-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            width: 24px;
 
-          span {
-            color: var(--gray-13);
-            font-weight: 500;
-            font-size: 1rem;
+            .icon {
+              font-size: 18px;
+            }
+          }
+
+          .menu-link {
+            span {
+              font-size: 15px;
+              font-weight: 500;
+            }
           }
         }
       }

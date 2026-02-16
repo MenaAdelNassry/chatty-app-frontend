@@ -1,0 +1,390 @@
+.chat-input-wrapper {
+  padding: 15px 20px;
+  background-color: #ffffff;
+  border-top: 1px solid #edf2f7;
+  position: relative; // Important for absolute positioning of preview
+
+  .file-preview-container {
+    position: absolute;
+    bottom: 100%; // Appears above the input
+    left: 20px;
+    padding: 10px;
+    z-index: 10;
+
+    .preview-card {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #50b5ff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      background: #fff;
+
+      img,
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        z-index: 12;
+      }
+
+      // --- The Loader Overlay ---
+      .preview-loader {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 11;
+
+        .spinner {
+          width: 30px;
+          height: 30px;
+          border: 3px solid #f3f3f3;
+          border-top: 3px solid #50b5ff;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        span {
+          font-size: 11px;
+          margin-top: 8px;
+          color: #50b5ff;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .chat-input-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #e9f0f7b8;
+    padding: 8px 15px;
+    border-radius: 25px;
+    transition: box-shadow 0.2s;
+
+    &:focus-within {
+      box-shadow: 0 0 0 2px rgba(80, 181, 255, 0.2);
+      background: #fff;
+      border: 1px solid #50b5ff;
+    }
+
+    .input-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      .emoji-container {
+        position: relative; // عشان الـ Picker يتسند عليه
+        display: flex;
+        align-items: center;
+
+        .emoji-picker-container {
+          position: absolute;
+          bottom: 50px; // يطلع فوق الانبوت
+          left: 0;
+          z-index: 1000;
+        }
+      }
+
+      .action-btn {
+        background: none;
+        border: none;
+        color: #8e8e8e;
+        font-size: 19px;
+        cursor: pointer;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        transition: color 0.2s;
+
+        &:hover {
+          color: #50b5ff;
+        }
+
+        &.active {
+          color: #50b5ff;
+        }
+      }
+    }
+
+    .text-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 14.5px;
+      color: #333;
+      padding: 5px;
+
+      &::placeholder {
+        color: #a0aec0;
+      }
+    }
+
+    .send-btn {
+      background: #50b5ff;
+      color: white;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 6px rgba(80, 181, 255, 0.2);
+
+      &:disabled {
+        background: #cbd5e0;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      &:hover:not(:disabled) {
+        background: darken(#50b5ff, 10%);
+        transform: scale(1.05);
+      }
+
+      svg {
+        font-size: 15px;
+        margin-left: 2px; // تظبيط شكل السهم في النص
+      }
+    }
+  }
+
+  .voice-recording-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8fafc;
+    border-radius: 25px;
+    margin: 5px;
+    animation: slideIn 0.3s ease;
+
+    .recording-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .pulse-dot {
+        width: 10px;
+        height: 10px;
+        background: #ff4d4d;
+        border-radius: 50%;
+        animation: recording-pulse 1.5s infinite;
+      }
+
+      .timer {
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+        color: #334155;
+      }
+    }
+
+    .recording-actions {
+      display: flex;
+      gap: 20px;
+
+      .action-btn.delete {
+        color: #94a3b8;
+        &:hover { color: #ef4444; }
+      }
+
+      .send-voice-btn {
+        background: #50b5ff;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+        &:hover { transform: scale(1.1); background: #3fa5ef; }
+      }
+    }
+  }.voice-recording-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8fafc;
+    border-radius: 25px;
+    margin: 5px;
+    animation: slideIn 0.3s ease;
+
+    .recording-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .pulse-dot {
+        width: 10px;
+        height: 10px;
+        background: #ff4d4d;
+        border-radius: 50%;
+        animation: recording-pulse 1.5s infinite;
+      }
+
+      .timer {
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+        color: #334155;
+      }
+    }
+
+    .recording-actions {
+      display: flex;
+      gap: 20px;
+
+      .action-btn.delete {
+        color: #94a3b8;
+        &:hover { color: #ef4444; }
+      }
+
+      .send-voice-btn {
+        background: #50b5ff;
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        transition: 0.2s;
+        &:hover { transform: scale(1.1); background: #3fa5ef; }
+      }
+    }
+  }
+
+  // ستايل زرار المايك في الحالة العادية
+  .mic-btn {
+    background: none;
+    border: none;
+    color: #50b5ff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 10px;
+    transition: 0.2s;
+    &:hover { transform: scale(1.1); color: #3fa5ef; }
+  }
+}
+
+.reply-preview-container {
+  background: #f8fafc; // لون فاتح جداً مريح للعين
+  border-left: 4px solid #50b5ff; // خط جانبي بلون الثيم
+  padding: 8px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin-bottom: -1px; // عشان يلحم في الـ input اللي تحته
+  animation: slideUp 0.2s ease-out; // أنيميشن ظهور لطيف
+
+  .reply-content {
+    flex: 1;
+    overflow: hidden;
+    margin-right: 10px;
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #50b5ff;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .msg-text {
+      font-size: 12px;
+      color: #64748b;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; // عشان لو الرسالة طويلة متبوظش الشكل
+    }
+  }
+
+  .close-reply {
+    background: #e2e8f0; // خلفية رمادية فاتحة
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%; // شكل دائري
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #cbd5e1;
+      color: #334155;
+      transform: scale(1.1); // تكبير بسيط عند الهوفر
+    }
+
+    svg {
+      font-size: 12px;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// أنيميشن ظهور الـ Preview من تحت لفوق
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// أنيميشن النبض
+@keyframes recording-pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.7); }
+  70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

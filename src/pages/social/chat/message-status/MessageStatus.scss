@@ -1,0 +1,21 @@
+// --- MessageStatus Styles ---
+.status-icon {
+  font-size: 15px;
+  display: flex;
+
+  &.sent {
+    color: #8696a0;
+  }
+
+  // علامة واحدة رمادي
+  &.delivered {
+    color: #8696a0;
+  }
+
+  // علامتين رمادي
+  &.read {
+    color: #53bdeb;
+  }
+
+  // علامتين أزرق
+}

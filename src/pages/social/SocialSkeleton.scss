@@ -1,0 +1,63 @@
+.social-skeleton-container {
+  height: 100vh;
+  background-color: var(--body-bg, #EFF1F6); // لون الخلفية
+  display: flex;
+  flex-direction: column; // عشان الهيدر يجي فوق والداشبورد تحته
+  overflow: hidden;
+
+  // 1. Header Styles
+  .skeleton-header-wrapper {
+    height: 80px; // نفس ارتفاع الهيدر الحقيقي (تأكد من الرقم عندك)
+    width: 100%;
+    background-color: var(--white-1, #FFFFFF);
+    border-bottom: 1px solid var(--white-4, #e0e3eb);
+    z-index: 2;
+    display: flex;
+    align-items: center
+  }
+
+  // 2. Dashboard Body Styles (Container for Sidebar + Content)
+  .skeleton-dashboard {
+    display: flex; // 🔥 ده السطر اللي بيجيبهم جنب بعض
+    flex-direction: row; // اتجاه أفقي
+    height: calc(100vh - 80px); // الطول الباقي من الشاشة
+    width: 100%;
+
+    // A. Sidebar Styles
+    .skeleton-sidebar-wrapper {
+      width: 280px; // 🔥 لازم نفس عرض السايدبار الحقيقي بالظبط
+      background-color: var(--white-10, #FFFFFF); // خلفية السايدبار
+      height: 100%;
+      display: none; // مخفي في الموبايل
+      border-right: 1px solid var(--white-4, #e0e3eb); // خط فاصل
+
+      // يظهر بس في الشاشات الكبيرة
+      @media (min-width: 992px) {
+        display: block;
+      }
+    }
+
+    // B. Content Styles
+    .skeleton-content {
+      flex: 1; // ياخد كل المساحة المتبقية
+      background-color: var(--body-bg, #EFF1F6);
+      height: 100%;
+
+      // 🔥 التعديل لضبط مكان اللودر
+      display: flex;
+      justify-content: center; // سنتر أفقي
+      align-items: center;
+
+      .skeleton-spinner {
+        font-size: 50px; // حجم الدايرة
+        color: var(--primary-1, #ccc); // لونها (ممكن تخليه رمادي غامق)
+        animation: spin 1s linear infinite; // أنيميشن الدوران
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

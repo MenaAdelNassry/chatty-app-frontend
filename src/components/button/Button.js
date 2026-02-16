@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
+import './Button.scss'; 
 
-const Button = (props) => {
-  const { handleClick, label, className, disabled, type } = props;
-
+const Button = ({ label, className, disabled, handleClick, type = 'button', style }) => {
   return (
     <button
-      type={`${type || 'button'}`}
-      className={className}
+      type={type}
+      className={`auth-button ${className || ''}`}
       onClick={handleClick}
       disabled={disabled}
+      style={style}
     >
       {label}
     </button>
@@ -21,6 +21,7 @@ Button.propTypes = {
   className: PropTypes.string,
   type: PropTypes.string,
   disabled: PropTypes.bool,
+  style: PropTypes.object,
 };
 
 export default Button;

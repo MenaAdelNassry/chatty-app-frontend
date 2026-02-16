@@ -1,0 +1,38 @@
+.otp-input-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+
+  .otp-field {
+    width: 45px;
+    height: 50px;
+    border: 1px solid var(--gray-5); // لون حدود هادي
+    border-radius: 8px;
+    background-color: var(--white-1);
+    color: var(--black-1);
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+
+    &:focus {
+      border-color: var(--primary-1); // اللون الأزرق بتاعنا
+      box-shadow: 0 0 0 4px rgba(80, 181, 255, 0.15); // Glow effect خفيف
+      transform: translateY(-2px); // حركة بسيطة لفوق
+    }
+
+    &.filled {
+      background-color: var(--white-4); // لون خفيف لما يتملي
+      border-color: var(--gray-13);
+    }
+
+    // للموبايل عشان الكيبورد تظهر ارقام
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}

@@ -1,117 +1,88 @@
 import '@pages/auth/register/Register.scss';
 import Input from '@components/input/Input';
 import Button from '@components/button/Button';
-import { useEffect, useState } from 'react';
-import { Utils } from '@services/utils/utils.services';
-import { authService } from '@services/api/auth/auth.service';
-import { useNavigate } from 'react-router-dom';
-import useLocalStorage from "@hooks/useLocalStorage";
+import useRegister from '@hooks/auth/useRegister';
+import { useEffect, useRef } from 'react';
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [alertType, setAlertType] = useState('');
-  const [user, setUser] = useState(null);
+  const { values, errors, apiError, isLoading, handleChange, registerUser } =
+    useRegister();
 
-  const [setStoredUsername] = useLocalStorage("username", "set");
-  const [setLoggedIn] = useLocalStorage("keepLoggedIn", "set");
+  // refs
+  // fieldsRef.current = { username: inputElement, email: inputElement, ... }
+  const fieldsRef = useRef({});
 
-  const navigate = useNavigate();
-
-  const registerUser = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const avatarColor = Utils.getRandomAvatarColor();
-      const avatarImage = Utils.generateAvatarImage(username[0].toUpperCase(), avatarColor);
-      const result = await authService.signUp({
-        username,
-        email,
-        password,
-        avatarColor,
-        avatarImage
-      });
-
-      setStoredUsername(username);
-      setLoggedIn(true); // default
-
-      setUser(result.data.user);
-      setAlertType('alert-success');
-      setHasError(false);
-    } catch (error) {
-      setIsLoading(false);
-      setHasError(true);
-      setAlertType('alert-error');
-      setErrorMessage(error?.response?.data.message);
-    }
-  }
-
+  // Focus on mount
   useEffect(() => {
-    if(isLoading && !user) return;
-    if(user) {
-      navigate("/app/social/streams");
-      setIsLoading(false);
+    if (fieldsRef.current.username) fieldsRef.current.username.focus();
+  }, []);
+
+  const handleRegisterSubmit = async (event) => {
+    event.preventDefault();
+
+    const validationErrors = await registerUser(event);
+
+    if (validationErrors) {
+      const firstErrorKey = Object.keys(validationErrors)[0];
+
+      if (firstErrorKey && fieldsRef.current[firstErrorKey]) {
+        fieldsRef.current[firstErrorKey].focus();
+      }
     }
-  }, [isLoading, user, navigate]);
+  };
 
   return (
     <div className="auth-inner">
-      {hasError && errorMessage && (
-        <div className={`alerts ${alertType}`} role="alert">
-          {errorMessage}
+      {apiError && (
+        <div className="alerts alert-error" role="alert">
+          {apiError}
         </div>
       )}
 
-      <form className="auth-form" onSubmit={registerUser}>
+      <form className="auth-form" onSubmit={handleRegisterSubmit}>
         <div className="form-input-container">
           <Input
+            ref={(el) => (fieldsRef.current['username'] = el)}
             id="username"
             name="username"
             type="text"
-            value={username}
+            value={values.username}
             labelText="Username"
             placeholder="Enter Username"
-            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
-            handleChange={(e) => {
-              setUsername(e.target.value);
-            }}
+            errorMessage={errors.username} // Joi Error
+            handleChange={handleChange} // Hook Function
           />
           <Input
+            ref={(el) => (fieldsRef.current['email'] = el)}
             id="email"
             name="email"
-            type="text"
-            value={email}
+            type="email"
+            value={values.email}
             labelText="Email"
             placeholder="Enter Email"
-            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
-            handleChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            errorMessage={errors.email}
+            handleChange={handleChange}
           />
           <Input
+            ref={(el) => (fieldsRef.current['password'] = el)}
             id="password"
             name="password"
             type="password"
-            value={password}
+            value={values.password}
             labelText="Password"
             placeholder="Enter Password"
-            style={{ border: `${hasError ? "1px solid #fa9b8a" : ""}` }}
-            handleChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            errorMessage={errors.password}
+            handleChange={handleChange}
           />
         </div>
 
         <Button
-          label={`${isLoading ? 'SIGNUP IN PROGRESS...' : 'SIGNUP'}`}
+          label={isLoading ? 'SIGNUP IN PROGRESS...' : 'SIGNUP'}
           className="auth-button button"
-          disabled={!username || !email || !password}
-          type={"submit"}
+          disabled={
+            !values.username || !values.email || !values.password || isLoading
+          }
+          type="submit"
         />
       </form>
     </div>

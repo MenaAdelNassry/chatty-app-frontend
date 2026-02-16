@@ -1,0 +1,209 @@
+// متغيرات الألوان
+$primary-blue: #50b5ff;
+$soft-blue: #e8f5ff;
+$text-main: #333;
+$text-muted: #8e8e8e;
+$bg-sidebar: #ffffff;
+$bg-page: #f9fafb;
+
+.chat-page-container {
+  display: flex;
+  height: calc(100vh - 70px);
+  background-color: $bg-page;
+  overflow: hidden;
+
+  .chat-sidebar {
+    width: 380px;
+    background: $bg-sidebar;
+    border-right: 1px solid #edf2f7;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.02);
+  }
+
+  .chat-window-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    position: relative;
+  }
+}
+
+.chat-list-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .chat-list-header {
+    padding: 24px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: $text-main;
+      margin: 0;
+    }
+    .convo-count {
+      color: $text-muted;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
+
+.chat-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 0 12px;
+
+  .chat-item {
+    display: flex;
+    padding: 14px;
+    gap: 15px;
+    cursor: pointer;
+    border-radius: 16px;
+    margin-bottom: 4px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+
+    &.active {
+      background-color: $soft-blue;
+
+      .name { color: $primary-blue !important; }
+
+      // هنا استبدلنا color.adjust بلون Hex صريح عشان نخلص من وجع الدماغ
+      .last-msg { color: #5a96c1 !important; }
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 25%;
+        height: 50%;
+        width: 4px;
+        background-color: $primary-blue;
+        border-radius: 0 4px 4px 0;
+      }
+    }
+
+    .avatar-container {
+      position: relative;
+      border: none;
+      .online-status-dot {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 14px;
+        height: 14px;
+        background-color: #2ecc71;
+        border: 3px solid #fff;
+        border-radius: 50%;
+      }
+    }
+
+    .chat-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 4px;
+
+        .name {
+          font-weight: 600;
+          font-size: 15.5px;
+          color: $text-main;
+        }
+        .time {
+          font-size: 11px;
+          color: $text-muted;
+          font-weight: 400;
+        }
+      }
+
+      .bottom-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .last-msg {
+          font-size: 13.5px;
+          color: $text-muted;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 180px;
+
+          &.unread {
+            color: #111;
+            font-weight: 600;
+          }
+        }
+
+        .unread-badge {
+          background-color: $primary-blue;
+          color: white;
+          font-size: 11px;
+          min-width: 18px;
+          height: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          font-weight: 700;
+          box-shadow: 0 2px 5px rgba($primary-blue, 0.3);
+        }
+      }
+    }
+  }
+}
+
+
+.empty-chat-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60%; // مش لازم يملأ الـ sidebar كله عشان ميبقاش شكله ضخم
+  text-align: center;
+  padding: 20px;
+  color: $text-muted;
+
+  .icon-wrapper {
+    font-size: 50px;
+    background-color: $soft-blue;
+    color: $primary-blue;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}

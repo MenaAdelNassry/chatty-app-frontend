@@ -1,24 +1,40 @@
-import axios from "@services/axios";
+import axiosService from '@services/axios';
 
 class AuthService {
   async signUp(body) {
-    const response = await axios.post('/signup', body);
+    const response = await axiosService.post('/signup', body);
     return response;
   }
 
   async signIn(body) {
-    const response = await axios.post('/signin', body);
+    const response = await axiosService.post('/signin', body);
+    return response;
+  }
+
+  async verifyEmail(email, otp) {
+    const response = await axiosService.post('/verify-email', { email, otp });
+    return response;
+  }
+
+  async resendOTP() {
+    const response = await axiosService.post('/resend-otp', {});
     return response;
   }
 
   async forgotPassword(email) {
-    const response = await axios.post('/forgot-password', { email });
-    return response;
+    return await axiosService.post('/forgot-password', { email });
   }
 
-  async resetPassword(token, body) {
-    const response = await axios.post(`/reset-password/${token}`, body);
-    return response;
+  async verifyOTP(email, otp) {
+    return await axiosService.post('/verify-otp', { email, otp });
+  }
+
+  async resetPassword(password, confirmPassword, resetToken) {
+    return await axiosService.post('/reset-password', {
+      password,
+      confirmPassword,
+      resetToken,
+    });
   }
 }
 

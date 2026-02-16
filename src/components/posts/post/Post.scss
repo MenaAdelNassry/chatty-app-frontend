@@ -1,0 +1,292 @@
+.post-card {
+  background: var(--white-1);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px; // مسافة بين كل بوست والتاني
+  overflow: hidden;
+
+  // 1. Header
+  .post-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    position: relative;
+
+    .post-header-details {
+      margin-left: 10px;
+      display: flex;
+      flex-direction: column;
+      flex: 1; // 🔥 إضافة: عشان ياخد المساحة ويزق القائمة لليمين
+
+      .username-feeling {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--gray-2);
+
+        .feeling {
+          font-weight: 400;
+          color: var(--gray-13);
+          margin-left: 5px;
+
+          img {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin: 0 4px;
+          }
+        }
+      }
+
+      .time-privacy {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        color: var(--gray-13);
+        margin-top: 2px;
+
+        .privacy-icon {
+          margin-left: 5px;
+          font-size: 10px;
+        }
+      }
+    }
+
+    .post-options {
+      margin-left: auto; // تأكيد إنه يروح أقصى اليمين
+      position: relative;
+
+      .options-trigger {
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gray-13);
+        transition: background 0.2s;
+
+        &:hover {
+          background-color: var(--white-4);
+        }
+      }
+
+      .options-list {
+        position: absolute;
+        top: 35px; // تحت النقط
+        right: 0; // محاذاة لليمين
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); // ضل قوي
+        width: 160px;
+        z-index: 10;
+        list-style: none;
+        padding: 5px 0;
+        overflow: hidden;
+
+        .option-item {
+          padding: 10px 15px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          font-size: 14px;
+          color: var(--gray-2);
+          transition: background 0.2s;
+
+          .item-icon {
+            font-size: 14px;
+          }
+
+          &:hover {
+            background-color: #f5f5f5;
+          }
+
+          // ستايل خاص للحذف
+          &.delete {
+            color: #ff4d4f;
+
+            &:hover {
+              background-color: #fff1f0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Body
+  .post-body {
+
+    // A. Normal Text
+    .post-text {
+      padding: 4px 16px 16px;
+      font-size: 15px;
+      color: var(--gray-2);
+      white-space: pre-wrap; // يحافظ على المسافات والسطور
+    }
+
+    // B. Colored Background (The Facebook Style)
+    .post-bg-text {
+      height: 350px; // طول ثابت للخلفيات الملونة
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 30px;
+      color: #fff;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    // C. Media
+    .post-image,
+    .post-video {
+      width: 100%;
+      display: block;
+      max-height: 600px; // عشان الصور الطويلة اوي متبوظش الصفحة
+      object-fit: cover;
+
+      // لو الخلفية لونها أبيض والصورة شفافة، نحط خلفية خفيفة
+      background-color: var(--white-4);
+    }
+  }
+
+  // 3. Footer (Reactions & Comments)
+  .post-footer {
+    padding: 0 16px;
+
+    // Counts Area
+    .post-counts {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--white-4);
+      font-size: 14px;
+      color: var(--gray-13);
+
+      .reactions-count-wrapper {
+        // display: flex;
+        // align-items: center;
+        // gap: 5px;
+
+        .reactions-display {
+          display: flex;
+          align-items: center;
+
+          .reaction-icon-display {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #fff; // حدود بيضاء عشان يفصلوا عن بعض
+            margin-right: -4px; // تداخل سلبي عشان يركبوا فوق بعض
+
+            &:last-of-type {
+              margin-right: 5px; // مسافة بين آخر صورة والرقم
+            }
+          }
+
+          .reactions-number {
+            font-size: 13px;
+            color: var(--gray-13);
+          }
+        }
+      }
+    }
+
+    // Action Buttons
+    .post-actions {
+      display: flex;
+      padding: 4px 0;
+
+      .reaction-wrapper-container {
+        position: relative; // عشان القائمة تبقى Absolute بالنسبة ليه
+        display: flex;
+        align-items: center;
+        width: fit-content;
+
+        // 🔥 السحر كله هنا: لما تعمل Hover على الحاوية، القائمة تظهر
+        &:hover {
+          .reactions-container-box {
+            display: flex;
+            opacity: 1;
+            transform: translateY(-50px) scale(1); // تطلع لفوق
+            visibility: visible;
+          }
+        }
+      }
+
+      // ستايل القائمة المخفية
+      .reactions-container-box {
+        position: absolute;
+        bottom: 5px; // مكانها المبدئي
+        left: -10px; // ترحيل بسيط عشان تبقى سنتر
+        background: white;
+        border-radius: 50px; // شكل كبسولة
+        padding: 5px 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        gap: 8px;
+
+        // حالة الإخفاء (Default)
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(0) scale(0.8);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); // أنميشن نطاط (Bouncy)
+        z-index: 10;
+
+        .reaction-item {
+          cursor: pointer;
+          transition: transform 0.2s ease;
+
+          img {
+            width: 40px; // حجم الصور جوه القائمة
+            height: 40px;
+            object-fit: contain;
+          }
+
+          // تكبير الرياكشن لما الماوس يجي عليه
+          &:hover {
+            transform: scale(1.3) translateY(-5px);
+          }
+        }
+      }
+
+      .action-btn {
+        flex: 1; // يقسموا المساحة بالتساوي
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 0;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--gray-13);
+        font-weight: 600;
+        font-size: 14px;
+        transition: background 0.2s;
+
+        .reaction-icon {
+          width: 20px;
+          height: 20px;
+          object-fit: cover;
+          margin-right: 5px;
+        }
+
+        .active-reaction {
+          font-weight: 600;
+          text-transform: capitalize; // Like -> Like, love -> Love
+        }
+
+        &:hover {
+          background-color: var(--white-4);
+        }
+
+        .icon {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}

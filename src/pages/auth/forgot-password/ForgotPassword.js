@@ -1,96 +1,79 @@
-import '@pages/auth/forgot-password/ForgotPassword.scss';
+import { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
-import Input from '@components/input/Input';
-import Button from '@components/button/Button';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@root/constants';
-import backgroundImage from '@assets/images/background.jpg';
-import { useState } from 'react';
-import { authService } from '@services/api/auth/auth.service';
+import useForgotPassword from '@hooks/auth/useForgotPassword';
+import '@pages/auth/forgot-password/ForgotPassword.scss';
+import EmailInput from './steps/EmailInput';
+import NewPassword from './steps/NewPassword';
+import SuccessStep from './steps/SuccessStep';
+import OtpInput from './steps/OtpInput';
+import AuthLayout from '../AuthLayout';
 
 const ForgotPassword = () => {
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [alertType, setAlertType] = useState('');
-  const [responseMessage, setResponseMessage] = useState('');
+  const { isLoading, sendOTP, verifyOTP, resetPassword } = useForgotPassword();
 
-  const forgotPassword = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
+  // --- Handlers ---
 
-    try {
-      const result = await authService.forgotPassword({
-        email,
-      });
-
-      setIsLoading(false);
-      setEmail('');
-      setAlertType('alert-success');
-      setResponseMessage(result.data.message);
-    } catch (error) {
-      setIsLoading(false);
-      setAlertType('alert-error');
-      setResponseMessage(error?.response?.data.message);
+  const handleEmailSubmit = async (inputEmail) => {
+    const success = await sendOTP(inputEmail);
+    if (success) {
+      setEmail(inputEmail);
+      setStep(2);
     }
   };
 
+  const handleOtpSubmit = async (otp) => {
+    const success = await verifyOTP(email, otp);
+    if (success) {
+      setStep(3);
+    }
+  };
+
+  const handlePasswordSubmit = async (password, confirmPassword) => {
+    const success = await resetPassword(password, confirmPassword);
+    if (success) {
+      setStep(4); // Success Step
+    }
+  };
+
+  // --- Render Steps ---
+  // We used Object Mapping instead of Switch Case to make the code cleaner
+  const steps = {
+    1: <EmailInput onSubmit={handleEmailSubmit} isLoading={isLoading} />,
+    2: (
+      <OtpInput
+        email={email}
+        onSubmit={handleOtpSubmit}
+        onResend={sendOTP}
+        isLoading={isLoading}
+      />
+    ),
+    3: <NewPassword onSubmit={handlePasswordSubmit} isLoading={isLoading} />,
+    4: <SuccessStep />,
+  };
+
   return (
-    <div
-      className="container-wrapper"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="environment">DEV</div>
-      <div className="container-wrapper-auth">
-        <div className="tabs forgot-password-tabs">
-          <div className="tabs-auth">
-            <ul className="tab-group">
-              <li className="tab">
-                <div className="login forgot-password">Forgot Password</div>
-              </li>
-            </ul>
-
-            <div className="tab-item">
-              <div className="auth-inner">
-                {responseMessage && (
-                  <div className={`alerts ${alertType}`} role="alert">
-                    {responseMessage}
-                  </div>
-                )}
-
-                <form className="auth-form" onSubmit={forgotPassword}>
-                  <div className="form-input-container">
-                    <Input
-                      id="email"
-                      name="email"
-                      type="text"
-                      value={email}
-                      labelText="Email"
-                      placeholder="Enter Email"
-                      style={{ border: alertType === 'alert-error' ? '1px solid #fa9b8a' : '' }}
-                      handleChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-
-                  <Button
-                    label={`${isLoading ? 'FORGOT PASSWORD IN PROGRESS...' : 'FORGOT PASSWORD'}`}
-                    className="auth-button button"
-                    disabled={!email}
-                    type="submit"
-                  />
-
-                  <Link to={ROUTES.AUTH}>
-                    <span className="forgot-password">
-                      <FaArrowLeft className="arrow-left" />
-                      Back to Login
-                    </span>
-                  </Link>
-                </form>
-              </div>
-            </div>
+    <AuthLayout>
+      <div className="forgot-password-card">
+        {step < 4 && (
+          <div className="back-arrow">
+            {step === 1 ? (
+              <Link to={ROUTES.AUTH}>
+                <FaArrowLeft />
+              </Link>
+            ) : (
+              <span onClick={() => setStep(step - 1)}>
+                <FaArrowLeft />
+              </span>
+            )}
           </div>
-        </div>
+        )}
+        {steps[step]}
       </div>
-    </div>
+    </AuthLayout>
   );
 };
 

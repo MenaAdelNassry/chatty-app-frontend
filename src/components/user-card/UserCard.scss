@@ -1,0 +1,239 @@
+.user-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s;
+  height: 320px;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  // 1. Cover
+  .card-cover {
+    width: 100%;
+    height: 90px;
+    background-size: cover;
+    background-position: center;
+    background-color: #eee;
+  }
+
+  // 2. Avatar Wrapper
+  .card-avatar-wrapper {
+    margin-top: -40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+
+    .profile-link {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      cursor: pointer;
+
+      &:hover {
+        .card-username {
+          text-decoration: underline;
+          color: var(--primary-1);
+        }
+        .avatar-container {
+          transform: scale(1.05);
+          transition: transform 0.2s;
+        }
+      }
+
+      .card-username {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 10px 0 2px;
+        color: var(--gray-1);
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+      }
+    }
+
+    .card-job {
+      font-size: 13px;
+      color: var(--gray-13);
+      margin-bottom: 15px;
+      text-align: center;
+      height: 18px;
+    }
+
+    .mutual-followers {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+      margin-bottom: 5px;
+      gap: 6px;
+
+      .mutual-avatars {
+        display: flex;
+        padding-left: 8px;
+        .mutual-avatar-item {
+          margin-left: -8px;
+          border: 2px solid white;
+          border-radius: 50%;
+          display: flex;
+          background-color: white;
+        }
+      }
+
+      .mutual-text {
+        font-size: 12px;
+        color: var(--gray-13);
+        line-height: 1.2;
+        strong {
+          font-weight: 600;
+          color: var(--gray-2);
+        }
+      }
+    }
+  }
+
+  // 3. Stats
+  .card-stats {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: auto;
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .stat-value {
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--gray-1);
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--gray-13);
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  // 4. Actions
+  .card-actions {
+    width: 100%;
+    padding: 15px;
+
+    // 🔥 خصائص مشتركة لكل الزراير عشان الشكل يظبط
+    button {
+      width: 100%;
+      padding: 8px 12px; // زودت padding عشان يبقى مريح
+      border: none;
+      border-radius: 6px; // خليته 6px يبقى أنعم
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    // --- Specific Button Styles ---
+
+    .follow-btn {
+      background-color: var(--primary-1);
+      color: white;
+      &:hover { background-color: var(--primary-2); }
+
+      &.is-following {
+        background-color: white;
+        border: 1px solid var(--primary-1);
+        color: var(--primary-1);
+        cursor: default;
+      }
+    }
+
+    .unfollow-btn {
+      background-color: transparent;
+      border: 1px solid #f44336;
+      color: #f44336;
+      &:hover {
+        background-color: #f44336;
+        color: white;
+      }
+    }
+
+    .unblock-btn {
+      background-color: #2196f3;
+      color: white;
+      &:hover { background-color: #1976d2; }
+    }
+
+    // --- Double Actions (Follow Back + Block) ---
+    .double-actions {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+
+        button {
+            flex: 1; // يقسموا المساحة بالنص
+            padding: 8px 5px; // تصغير الـ padding شوية عشان الكلام يكفي
+            font-size: 13px;
+        }
+
+        // زرار Follow Back بياخد ستايل الـ Follow
+        button:not(.block-btn) {
+             background-color: var(--primary-1);
+             color: white;
+             &:hover { background-color: var(--primary-2); }
+        }
+
+        .block-btn {
+            background-color: #ffebee; // أحمر فاتح جداً للخلفية
+            color: #d32f2f; // أحمر غامق للنص
+            border: 1px solid #ffcdd2; // حدود حمراء خفيفة
+
+            &:hover {
+                background-color: #ef9a9a;
+                color: white;
+                border-color: #ef9a9a;
+            }
+        }
+    }
+
+    .action-completed {
+      text-align: center;
+      color: var(--primary-1);
+      font-weight: bold;
+      padding: 8px;
+    }
+  }
+}
+
+// Blocked Card State
+.blocked-card {
+  opacity: 0.8;
+  filter: grayscale(100%); // يخلي الكارت كله أبيض وأسود
+  .card-username { text-decoration: line-through; }
+}

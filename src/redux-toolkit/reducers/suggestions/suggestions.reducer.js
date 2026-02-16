@@ -11,6 +11,10 @@ const suggestionsSlice = createSlice({
   name: "suggestions",
   initialState,
   reducers: {
+    removeFromSuggestions: (state, action) => {
+      state.users = state.users.filter((user) => user._id !== action.payload._id);
+    },
+
     addToSuggestions: (state, action) => {
       state.users = [...action.payload.users];
       state.isLoading = action.payload.isLoading;
@@ -33,5 +37,5 @@ const suggestionsSlice = createSlice({
   }
 });
 
-export const { addToSuggestions } = suggestionsSlice.actions;
+export const { addToSuggestions, removeFromSuggestions } = suggestionsSlice.actions;
 export default suggestionsSlice.reducer;
