@@ -1,0 +1,50 @@
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); // خلفية سوداء غامقة
+  z-index: 9999; // فوق كل حاجة
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+
+  .image-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+
+    .modal-image {
+      max-width: 100%; // عشان متبقاش أكبر من الشاشة
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: -40px;
+      right: -10px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px;
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.2);
+        color: #ff4d4f;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

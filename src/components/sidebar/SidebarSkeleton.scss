@@ -1,0 +1,55 @@
+.sidebar-skeleton {
+  // 🔥 1. غير الخلفية لأبيض صريح عشان تفصل عن الـ Body
+  background-color: var(--white-1, #FFFFFF);
+
+  height: 100%;
+  padding: 20px 10px;
+  overflow: hidden;
+
+  // 🔥 2. ضيف خط يمين عشان يحدد نهاية السايدبار
+  border-right: 1px solid var(--white-4, #e0e3eb);
+
+  .skeleton-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .skeleton-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    box-shadow: none;
+
+    // Active Item Imitation
+    &.active-clone {
+      // هنا بنخلي العنصر النشط يبان كأنه زرار ابيض بارز
+      background-color: var(--white-1, #FFFFFF);
+      border: 1px solid var(--white-4, #e0e3eb); // بوردر خفيف
+      box-shadow: 0 12px 5px rgba(0, 0, 0, 0.08);
+
+      .react-loading-skeleton {
+        --base-color: #d1d1d1;
+        --highlight-color: #f0f0f0;
+      }
+    }
+
+    .skeleton-icon {
+      margin-right: 15px;
+      width: 24px;
+      display: flex;
+      align-items: center;
+    }
+
+    .skeleton-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+}

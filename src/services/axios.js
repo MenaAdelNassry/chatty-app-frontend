@@ -9,13 +9,15 @@ const axiosService = axios.create({
   headers: { 'Content-Type': "application/json", Accept: 'application/json' }
 });
 
+// if user manipulated in the front end
+// the interceptor return it to Home Page
 axiosService.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
     if(error.response && error.response.status === 401) {
-      localStorage.removeItem('username');
+      localStorage.removeItem('email');
       localStorage.removeItem('keepLoggedIn');
 
       window.location.href = ROUTES.AUTH;

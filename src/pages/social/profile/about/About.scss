@@ -1,0 +1,36 @@
+.about-tab-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px; // مش لازم ياخد الشاشة كلها
+    margin: 0 auto; // سنتر
+
+    .about-card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+
+        h3 { margin-top: 0; color: #1c1e21; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+
+        .info-list {
+            display: flex; flex-direction: column; gap: 15px;
+            .info-item {
+                display: flex; align-items: center; gap: 15px; font-size: 16px; color: #333;
+                .icon { color: #8a8d91; font-size: 20px; }
+            }
+        }
+
+        .social-links {
+            display: flex; flex-wrap: wrap; gap: 20px;
+            .social-item {
+                display: flex; align-items: center; gap: 10px; text-decoration: none; color: #333; font-weight: 500;
+                &.fb { color: #1877f2; }
+                &.tw { color: #1da1f2; }
+                &.insta { color: #c32aa3; }
+                &.yt { color: #ff0000; }
+                &:hover { text-decoration: underline; }
+            }
+        }
+    }
+}

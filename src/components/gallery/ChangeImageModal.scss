@@ -1,0 +1,251 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .modal-content {
+    background: white;
+    width: 500px;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between; // العنوان يمين والزرار شمال (أو العكس حسب اللغة)
+      align-items: center; // سنتر عمودي
+      padding: 15px 20px;
+      border-bottom: 1px solid #e5e5e5; // خط فاصل خفيف تحت الهيدر
+      background-color: #fff;
+      border-radius: 8px 8px 0 0; // عشان الكورنر اللي فوق يبقى مدور زي المودال
+
+      h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1c1e21; // لون أسود هادي
+        text-transform: capitalize; // يخلي أول حرف كابيتال
+      }
+
+      .close-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 20px;
+        color: #606770; // لون رمادي للأيقونة
+        padding: 8px;
+        border-radius: 50%; // عشان الـ Hover يبقى دايرة
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background-color: #f0f2f5; // خلفية رمادي فاتح عند اللمس
+          color: #1c1e21; // تغميق اللون
+        }
+
+        &:active {
+          transform: scale(0.95); // تأثير ضغطة بسيط
+        }
+      }
+    }
+
+    .modal-tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+
+      button {
+        flex: 1;
+        padding: 15px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #777;
+        border-bottom: 3px solid transparent;
+
+        &.active {
+          color: var(--primary-1);
+          border-bottom-color: var(--primary-1);
+        }
+
+        &:hover {
+          background-color: #f9f9f9;
+        }
+      }
+    }
+
+    .modal-body {
+      height: 400px; // ارتفاع ثابت عشان الـ Cropper
+      position: relative;
+      background: #333;
+
+      .upload-section {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f2f5;
+
+        .upload-btn {
+          padding: 10px 20px;
+          background: var(--primary-1);
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+      }
+
+      .cropper-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); // 3 صور في الصف
+        gap: 10px;
+        padding: 15px;
+        overflow-y: auto; // سكرول لو الصور كتير
+        height: 100%;
+
+        .gallery-image-item {
+          cursor: pointer;
+          border: 2px solid transparent;
+          border-radius: 4px;
+          overflow: hidden;
+          height: 100px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          &.selected {
+            border-color: var(--primary-1);
+            opacity: 0.8;
+            position: relative;
+
+            &::after {
+              // علامة صح
+              content: '✓';
+              position: absolute;
+              top: 5px;
+              right: 5px;
+              background: var(--primary-1);
+              color: white;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 12px;
+            }
+          }
+        }
+
+        .empty-msg {
+          width: 100%;
+          height: 100%; // ياخد المساحة كلها عشان السنترة تشتغل
+          display: flex;
+          flex-direction: column; // الأيقونة فوق والكلام تحت
+          align-items: center;
+          justify-content: center;
+          color: #8a8d91; // لون رمادي هادي (زي فيسبوك)
+          gap: 10px; // مسافة بين الأيقونة والكلام
+          grid-column: 1 / -1;
+
+          .icon {
+            font-size: 50px; // حجم الأيقونة كبير
+            opacity: 0.5; // شفافة شوية
+            margin-bottom: 5px;
+          }
+
+          span {
+            font-size: 16px;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
+    .modal-footer {
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+
+      .slider-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+
+        button {
+          padding: 8px 16px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 600;
+          border: none;
+          transition: all 0.2s ease-in-out;
+
+          &:active {
+            transform: scale(0.96);
+          }
+        }
+
+        .cancel-btn {
+          background-color: #e4e6eb; // رمادي فاتح
+          color: #050505;
+
+          &:hover {
+            background-color: #d8dadf;
+          }
+        }
+
+        .save-btn {
+          background-color: var(--primary-1); // اللون الأساسي بتاعك (أزرق مثلاً)
+          color: white;
+
+          &:hover {
+            filter: brightness(0.9); // يغمق سنة لما تقف عليه
+          }
+
+          // 🔥🔥 هنا الشغل كله: حالة الـ Loading / Disabled 🔥🔥
+          &:disabled {
+            background-color: #a8c7fa; // لون أزرق باهت (أو استخدم opacity)
+            // أو ممكن تستخدم: opacity: 0.5; مع background-color الأصلي
+
+            color: rgba(255, 255, 255, 0.8); // النص يبقى باهت شوية
+            cursor: not-allowed; // شكل الماوس يبقى علامة "ممنوع"
+            pointer-events: none; // يمنع أي تفاعل بالماوس
+            transform: none; // يلغي تأثير الـ active (الضغطة)
+            box-shadow: none;
+          }
+        }
+      }
+    }
+  }
+}

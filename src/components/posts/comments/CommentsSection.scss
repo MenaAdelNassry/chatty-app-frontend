@@ -1,0 +1,172 @@
+.comments-container {
+  border-top: 1px solid #e5e5e5;
+  background-color: #f9f9f9;
+  padding: 10px 15px;
+  animation: fadeIn 0.3s ease;
+
+  // A. Input Area
+  .comment-input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: flex-start; // عشان لو الصورة كبيرة متشدش الانبوت
+
+    .comment-input-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .comment-input {
+        width: 100%;
+        background: #f0f2f5;
+        border: 1px solid transparent; // بوردر شفاف عشان ميعملش layout shift لما ياخد focus
+        border-radius: 20px;
+        padding: 10px 45px 10px 15px; // زودنا اليمين شوية عشان الأيقونة
+        font-size: 14px;
+        outline: none;
+        height: 40px;
+        transition: all 0.2s ease;
+
+        &:focus {
+          background: #fff; // لون أبيض لما أكتب بيبقى أشيك
+          border-color: var(--primary-1); // حدود زرقاء خفيفة (لو عندك المتغير ده)
+          box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1); // توهج خفيف
+        }
+      }
+
+      .comment-submit-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%); // سنترة رأسية دقيقة
+        cursor: pointer;
+        color: var(--primary-1);
+        padding: 5px;
+
+        &:hover {
+          transform: translateY(-50%) scale(1.1); // تكبير مع الحفاظ على السنترة
+        }
+      }
+    }
+  }
+
+  // B. Comments List
+  .comments-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+
+    // سكرول بار شكله حلو للكومنتات
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 10px;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+
+      .comment-bubble-wrapper {
+        display: flex;
+        flex-direction: column;
+        max-width: 85%; // عشان البابل متمطش للاخر خالص ويبقى شكلها وحش
+
+        .comment-bubble {
+          background: #fff; // خليتها أبيض بدل رمادي عشان تبرز عن خلفية السكشن
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); // ضل خفيف
+          padding: 8px 12px;
+          border-radius: 18px;
+          position: relative;
+          display: inline-block;
+          border-top-left-radius: 4px; // حركة ستايلش: الزاوية اللي عند الصورة مربعة
+
+          .bubble-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+
+            .username {
+              font-weight: 700;
+              font-size: 13px;
+              color: var(--gray-2);
+            }
+
+            .delete-icon {
+              font-size: 11px;
+              color: #bbb;
+              cursor: pointer;
+              margin-left: 8px;
+              transition: color 0.2s;
+              // opacity: 0; // ممكن تلغيها لو عايز أيقونة المسح ظاهرة دايماً
+
+              &:hover {
+                color: #e74c3c;
+              }
+            }
+          }
+
+          .comment-text {
+            font-size: 14px;
+            color: var(--gray-2);
+            margin: 0;
+            line-height: 1.4;
+            word-break: break-word; // عشان الكلام الطويل ميكسرش الlayout
+          }
+        }
+
+        // Hover Logic: Show delete icon when hovering bubble
+        .comment-bubble:hover .bubble-header .delete-icon {
+          opacity: 1;
+        }
+
+        .comment-time {
+          font-size: 11px;
+          color: var(--gray-13);
+          margin-left: 5px;
+          margin-top: 4px;
+        }
+      }
+    }
+
+    // 🔥 C. Empty State (No Comments)
+    .empty-msg {
+      text-align: center;
+      color: var(--gray-13);
+      font-size: 14px;
+      padding: 20px 0;
+      font-style: italic;
+
+      // ممكن تضيف أيقونة صغيرة قبلها بالـ ::before
+      &::before {
+        content: '💬';
+        display: block;
+        font-size: 24px;
+        margin-bottom: 5px;
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

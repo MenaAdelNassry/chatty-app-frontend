@@ -1,0 +1,22 @@
+.chat-page-container {
+  display: flex;
+  height: calc(100vh - 70px); // طرح طول الهيدر
+  background-color: #f0f2f5;
+  overflow: hidden;
+
+  .chat-sidebar {
+    width: 360px;
+    background: white;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-window-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #e5ddd5; // لون خلفية الواتساب التقليدي
+    position: relative;
+  }
+}

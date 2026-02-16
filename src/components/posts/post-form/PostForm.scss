@@ -1,0 +1,82 @@
+.post-form-card {
+  background: var(--white-1);
+  border-radius: 10px; // نفس تدويرة Suggestions
+  padding: 15px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); // ظل خفيف
+  margin-bottom: 20px; // مسافة تحت الفورم عشان البوستات
+
+  // --- Top Section ---
+  .post-form-top {
+    display: flex;
+    align-items: center;
+    gap: 12px; // مسافة بين الصورة والانبوت
+    margin-bottom: 12px;
+
+    .post-form-input {
+      background-color: #f0f2f5; // رمادي فاتح جداً (زي فيسبوك)
+      border-radius: 50px; // شكل الكبسولة
+      padding: 10px 15px;
+      flex-grow: 1; // ياخد باقي المساحة
+      cursor: pointer; // عشان يبان إنه زرار
+      color: var(--gray-13); // لون النص الباهت
+      font-size: 16px;
+      transition: background-color 0.3s;
+      min-height: 45px; // ارتفاع مريح
+      display: flex;
+      align-items: center;
+
+      // طريقة لعرض النص كـ Placeholder
+      &::before {
+        content: attr(data-placeholder);
+        color: #65676b;
+      }
+
+      &:hover {
+        background-color: #e4e6eb; // يغمق سنة لما تقف عليه
+      }
+    }
+  }
+
+  // --- Divider ---
+  .divider {
+    border: 0;
+    border-top: 1px solid var(--white-4); // خط فاصل خفيف
+    margin: 0;
+  }
+
+  // --- Bottom Section ---
+  .post-form-actions {
+    display: flex;
+    justify-content: space-between; // يوزعهم بالتساوي
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      flex: 1; // كل واحد ياخد تلت المساحة
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #f0f2f5;
+      }
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .action-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-13);
+      }
+    }
+  }
+}

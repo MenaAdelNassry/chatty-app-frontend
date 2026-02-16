@@ -1,175 +1,115 @@
-.social-dropdown {
-  width: 300px;
-  margin: auto;
-  background: var(--white-1);
-  border-radius: 5px;
-  transition: all 0.3s;
-  position: relative;
-  z-index: 2;
-  margin-top: 10px;
-  box-shadow: rgb(145 158 171 / 20%) 0 0 2px 0, rgb(145 158 171 / 12%) 0 12px 24px -4px;
+@import '@assets/scss/mixins.scss';
 
-  .social-card {
-    background: var(--white-1);
-    border-radius: 5px;
+.dropdown-container {
+  width: 320px;
+  background: var(--white-1);
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  z-index: 200;
+  overflow: hidden;
+
+  .dropdown-card {
     border: none;
 
-    .social-bg-primary {
+    // Header
+    .dropdown-header {
       background-color: var(--primary-1);
-      padding: 15px;
-      height: 57px;
-      border-radius: 5px;
+      padding: 15px 20px;
 
       h5 {
+        margin: 0;
         font-size: 16px;
-        padding: 5px 0;
+        font-weight: 600;
         color: var(--white-1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-        .social-count {
-          float: right;
-          font-size: 12px;
+        .count-badge {
+          font-size: 11px;
           font-weight: 700;
-          line-height: 16px;
-          white-space: nowrap;
-          color: var(--gray-3);
-          background-color: var(--white-7);
-          padding: 3px 8px;
-          border-radius: 5px;
+          color: var(--primary-1);
+          background-color: var(--white-1);
+          padding: 2px 8px;
+          border-radius: 10px;
         }
       }
     }
 
-    &-body-info {
-      border: 1px solid var(--white-7);
+    // Body
+    .dropdown-body {
       background: var(--white-1);
 
-      &-container {
+      .scrollable-content {
         overflow-y: auto;
-        &::-webkit-scrollbar {
-          width: 8px;
-        }
-        &::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 4px;
-        }
-        &::-webkit-scrollbar-thumb {
-          background: #ccc;
-          border-radius: 4px;
-        }
-        &::-webkit-scrollbar-thumb:hover {
-          background: #555;
-          border-radius: 4px;
-        }
 
-        .social-sub-card {
-          padding: 5px 15px;
-          margin-top: 3px;
-          border-bottom: 1px solid var(--white-4);
-          display: grid;
-          grid-template-areas: "avatar body icon";
-          grid-template-columns: max-content 1fr max-content;
-          grid-template-rows: 1fr;
-          width: 100%;
-          cursor: pointer;
-
-          .content-avatar {
-            grid-area: avatar;
-            display: flex;
-            width: 45px;
-            height: 45px;
-            text-align: center;
-            border: 5px;
-
-            .userIcon {
-              width: 30px;
-              height: 30px;
-              align-self: center;
-              color: var(--primary-1);
-            }
-          }
-
-          .content-body {
-            grid-area: body;
-            width: 95%;
-            overflow-x: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-
-            .title {
-              font-size: 14px;
-              line-height: 21px;
-              height: 21px;
-              display: contents;
-              color: var(--black-4);
-            }
-
-            .subtext {
-              font-size: 12px;
-              color: var(--gray-9);
-            }
-          }
-
-          .content-icons {
-            grid-area: icon;
-            display: flex;
-            flex-direction: column;
-            align-self: center;
-
-            .trash {
-              font-size: 14px;
-              color: var(--red-3);
-            }
-
-            .circle {
-              margin: auto;
-              margin-top: 6px;
-              font-size: 10px;
-              color: var(--primary-1);
-            }
-          }
-
-          &:hover {
-            background-color: var(--white-14);
-          }
-        }
+        @include custom-scrollbar(5px);
       }
+    }
 
-      .social-sub-button {
-        text-align: center;
-        margin: 10px 0;
-        cursor: auto;
-
-        .signOut {
-          background-color: var(--primary-1);
-          color: var(--white-1);
-          border-radius: 5px;
-          font-size: 14px;
-          font-weight: 700;
-          cursor: pointer;
-
-          &:hover {
-            opacity: 0.8;
-          }
-        }
-      }
+    // Footer
+    .dropdown-footer {
+      padding: 10px;
+      text-align: center;
+      border-top: 1px solid var(--white-4);
+      background-color: var(--white-2);
     }
   }
 }
 
+// Dropdown Item Styles
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 15px; // مسافة ثابتة بين الصورة والكلام
+  border-bottom: 1px solid var(--white-4);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  background-color: var(--white-1);
 
-// /* المسار اللي بيمشي فيه (Track) */
-// .social-card-body-info-container::-webkit-scrollbar-track {
-//   background: #f1f1f1;
-//   border-radius: 4px;
-// }
+  &:hover {
+    background-color: var(--white-14); // لون فاتح عند الهوفر
+  }
 
-// /* المقبض اللي بتمسكه (Handle) */
-// .social-card-body-info-container::-webkit-scrollbar-thumb {
-//   background: #ccc; /* لون رمادي هادي */
-//   border-radius: 4px;
-// }
+  &:last-child {
+    border-bottom: none;
+  }
 
-// /* لما تقف عليه بالماوس */
-// .social-card-body-info-container::-webkit-scrollbar-thumb:hover {
-//   background: #555; /* يغمق شوية لما تقف عليه */
-// }
+  &.top-border {
+    border-top: 1px solid var(--white-4);
+  }
+
+  .item-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-11);
+    font-size: 20px;
+    // flex-shrink: 0; // عشان الصورة متتفعصش
+  }
+
+  .item-content {
+    flex: 1;
+    overflow: hidden;
+
+    .title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--black-4);
+      margin: 0 0 2px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .subtext {
+      font-size: 12px;
+      color: var(--gray-9);
+      margin: 0;
+    }
+  }
+}

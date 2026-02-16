@@ -1,45 +1,37 @@
 import PropTypes from 'prop-types';
 import '@components/dropdown/Dropdown.scss';
 
-const Dropdown = ({
-  title,
-  subTitle,
-  children,
-  style,
-  height,
-  footer
-}) => {
+const Dropdown = ({ title, subTitle, children, style, height, footer }) => {
   return (
-    <div className="social-dropdown" style={style} data-testid="dropdown">
-      <div className="social-card">
+    <div className="dropdown-container" style={style} data-testid="dropdown">
+      <div className="dropdown-card">
 
-        {/* --- 1. Header --- */}
-        <div className="social-card-body">
-          <div className="social-bg-primary">
-            <h5>
-              {title}
-              {subTitle?.toString() && <small className="social-count">{subTitle}</small>}
-            </h5>
-          </div>
-
-          <div className="social-card-body-info">
-            {/* --- 2. Body (Dynamic Content) --- */}
-            <div
-              data-testid="info-container"
-              className="social-card-body-info-container"
-              style={{ maxHeight: `${height}px` }}
-            >
-              {children}
-            </div>
-
-            {/* --- 3. Footer (Optional) --- */}
-            {footer && (
-              <div className="social-sub-button">
-                {footer}
-              </div>
+        {/* 1. Header */}
+        <div className="dropdown-header">
+          <h5>
+            {title}
+            {(subTitle !== undefined && subTitle !== null) && (
+              <small className="count-badge">{subTitle}</small>
             )}
+          </h5>
+        </div>
+
+        {/* 2. Body (Dynamic Items) */}
+        <div className="dropdown-body">
+          <div
+            className="scrollable-content"
+            style={{ maxHeight: `${height}px` }}
+          >
+            {children}
           </div>
         </div>
+
+        {/* 3. Footer (optional) */}
+        {footer && (
+          <div className="dropdown-footer">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -52,6 +44,10 @@ Dropdown.propTypes = {
   style: PropTypes.object,
   height: PropTypes.number,
   footer: PropTypes.node
+};
+
+Dropdown.defaultProps = {
+  height: 300
 };
 
 export default Dropdown;

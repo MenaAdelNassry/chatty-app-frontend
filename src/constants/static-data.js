@@ -1,4 +1,4 @@
-import { FaUserAlt, FaSignOutAlt } from 'react-icons/fa';
+import { FaUserAlt, FaSignOutAlt, FaVideo, FaCog } from 'react-icons/fa';
 import blessed from '@assets/feelings/blessed.jpg';
 import excited from '@assets/feelings/excited.jpg';
 import happy from '@assets/feelings/happy.jpg';
@@ -21,7 +21,6 @@ import {
   FaRegBell,
   FaRegUser,
   FaUser,
-  FaUserCheck,
   FaUserPlus,
   FaUsers
 } from 'react-icons/fa';
@@ -37,37 +36,37 @@ export const sideBarItems = [
   {
     index: 2,
     name: 'Chat',
-    url: '/app/social/chat/messages',
+    url: ROUTES.SOCIAL_CHAT_MESSAGES,
     iconName: 'FaComments'
   },
   {
     index: 3,
     name: 'People',
-    url: '/app/social/people',
+    url: ROUTES.SOCIAL_PEOPLE,
     iconName: 'FaUsers'
   },
   {
     index: 4,
-    name: 'Following',
-    url: '/app/social/following',
-    iconName: 'FaUserPlus'
-  },
-  {
-    index: 5,
-    name: 'Followers',
-    url: '/app/social/followers',
+    name: 'Connections',
+    url: ROUTES.SOCIAL_CONNECTIONS,
     iconName: 'FaHeart'
   },
   {
-    index: 6,
+    index: 5,
     name: 'Photos',
-    url: '/app/social/photos',
+    url: ROUTES.SOCIAL_PHOTOS,
     iconName: 'FaImages'
+  },
+  {
+    index: 6,
+    name: 'Videos',
+    url: ROUTES.SOCIAL_VIDEOS,
+    iconName: 'FaVideo'
   },
   {
     index: 7,
     name: 'Notifications',
-    url: '/app/social/notifications',
+    url: ROUTES.SOCIAL_NOTIFICATIONS,
     iconName: 'FaRegBell'
   },
   {
@@ -110,7 +109,8 @@ export const fontAwesomeIcons = {
   FaImages: <FaImages className="icon" />,
   FaRegBell: <FaRegBell className="icon" />,
   FaBirthdayCake: <FaBirthdayCake className="icon" />,
-  FaRegUser: <FaRegUser className="icon" />
+  FaRegUser: <FaRegUser className="icon" />,
+  FaVideo: <FaVideo className='icon' />
 };
 
 export const privacyList = [
@@ -118,11 +118,6 @@ export const privacyList = [
     topText: 'Public',
     subText: 'Anyone on SocialApp',
     icon: <FaGlobe className="globe-icon globe" />
-  },
-  {
-    topText: 'Followers',
-    subText: 'Your followers on SocialApp',
-    icon: <FaUserCheck className="globe-icon globe" />
   },
   {
     topText: 'Private',
@@ -174,32 +169,12 @@ export const avatarColors = [
   '#d84315'
 ];
 
-export const emptyPostData = {
-  _id: '',
-  post: '',
-  bgColor: '',
-  privacy: '',
-  feelings: '',
-  gifUrl: '',
-  profilePicture: '',
-  image: '',
-  userId: '',
-  username: '',
-  email: '',
-  avatarColor: '',
-  commentsCount: '',
-  reactions: [],
-  imgVersion: '',
-  imgId: '',
-  createdAt: ''
-};
-
 export const reactionsMap = {
   like,
   love,
   wow,
   sad,
-  happyReaction,
+  happy: happyReaction,
   angry
 };
 
@@ -211,37 +186,6 @@ export const reactionsColor = {
   sad: '#f7b124',
   wow: '#f7b124'
 };
-
-export const notificationItems = [
-  {
-    index: 0,
-    title: 'Direct Messages',
-    description: 'New direct messages notifications.',
-    toggle: true,
-    type: 'messages'
-  },
-  {
-    index: 1,
-    title: 'Follows',
-    description: 'New followers notifications.',
-    toggle: true,
-    type: 'follows'
-  },
-  {
-    index: 2,
-    title: 'Post Reactions',
-    description: 'New reactions for your posts notifications.',
-    toggle: true,
-    type: 'reactions'
-  },
-  {
-    index: 3,
-    title: 'Comments',
-    description: 'New comments for your posts notifications.',
-    toggle: true,
-    type: 'comments'
-  }
-];
 
 export const tabItems = (showPassword, showNotification) => {
   const items = [
@@ -270,9 +214,45 @@ export const settingsItems = [
     icon: <FaUserAlt color='#50b5ff' size={30} />
   },
   {
+    id: 'settings',
+    title: 'Settings',
+    subTitle: 'Account, Password, Notif.',
+    icon: <FaCog color='#50b5ff' size={30} />
+  },
+  {
     id: 'logout',
     title: 'Sign out',
     subTitle: 'Separate from device',
     icon: <FaSignOutAlt size={20} />
   }
 ];
+
+export const notificationTypes = {
+  REACTION: 'reactions',
+  COMMENT: 'comments',
+  FOLLOW: 'follows'
+};
+
+export const OTP_TIMER = {
+  VERIFY_EMAIL: 300, // 5 minutes (in seconds)
+  FORGOT_PASSWORD: 600, // 10 minutes
+  RESEND_WAIT: 60, // 1 minute (The time the user waits before pressing resend)
+};
+
+export const reactionsItems = [
+  { name: 'like', image: like },
+  { name: 'love', image: love },
+  { name: 'happy', image: happyReaction },
+  { name: 'wow', image: wow },
+  { name: 'sad', image: sad },
+  { name: 'angry', image: angry }
+];
+
+export const reactionIcons = {
+  like: '👍',
+  love: '❤️',
+  happy: '😂',
+  wow: '😮',
+  sad: '😢',
+  angry: '😡'
+};

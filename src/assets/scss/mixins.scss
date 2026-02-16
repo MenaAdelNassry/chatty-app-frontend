@@ -1,0 +1,25 @@
+// _mixins.scss
+@mixin custom-scrollbar($width: 8px, $color: #ccc, $track-color: #f1f1f1) {
+  // للكروم والسفاري وايدج الجديد
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: darken($color, 10%); // يغمق لما تقف عليه
+  }
+
+  // للفايرفوكس (Syntax مختلف شوية)
+  scrollbar-width: thin;
+  scrollbar-color: $color $track-color;
+}

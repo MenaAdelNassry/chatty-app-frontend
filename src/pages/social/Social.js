@@ -1,27 +1,30 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import "@pages/social/Social.scss"
-import Header from "@components/header/Header"
-import Sidebar from '@components/sidebar/Sidebar'
-import PageLoader from '@components/page-loader/PageLoader'
-import { Suspense } from 'react'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import '@pages/social/Social.scss';
+import Header from '@components/header/Header';
+import Sidebar from '@components/sidebar/Sidebar';
+import AddPostModal from '@components/posts/post-modal/AddPostModal';
+import ReactionsModal from '@components/posts/reaction-modal/ReactionsModal';
+import ImageModal from '@components/posts/image-modal/ImageModal';
 
 const Social = () => {
   return (
-    <>
+    <div className="social-app-container">
       <Header />
-      <div className='dashboard'>
-        <div className='dashboard-sidebar'>
+      <AddPostModal />
+      <ReactionsModal />
+      <ImageModal />
+
+      <div className="dashboard">
+        <div className="dashboard-sidebar">
           <Sidebar />
         </div>
-        <div className='dashboard-content'>
-          <Suspense fallback={PageLoader}>
-            <Outlet />
-          </Suspense>
+        <div className="dashboard-content">
+          <Outlet />
         </div>
       </div>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default Social
+export default Social;

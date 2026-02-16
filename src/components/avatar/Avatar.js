@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import '@components/avatar/Avatar.scss';
 
-const Avatar = ({ avatarSrc, name, bgColor = '#f33e58', textColor = '#ffffff', size = 50, round = true }) => {
+const Avatar = ({ avatarSrc, name, bgColor = '#f33e58', textColor = '#ffffff', size = 50, round = true, onClick }) => {
   const textSizeRatio = 1.7;
   const fontSize = Math.floor(size / textSizeRatio);
   const firstNameCharacter = name?.charAt(0);
@@ -12,7 +12,8 @@ const Avatar = ({ avatarSrc, name, bgColor = '#f33e58', textColor = '#ffffff', s
     borderRadius: round ? '50%' : '8px',
     backgroundColor: !avatarSrc ? bgColor : 'transparent',
     color: textColor,
-    fontSize: `${fontSize}px`
+    fontSize: `${fontSize}px`,
+    cursor: onClick ? 'pointer' : ''
   };
 
   return (
@@ -20,6 +21,7 @@ const Avatar = ({ avatarSrc, name, bgColor = '#f33e58', textColor = '#ffffff', s
       className="avatar-container"
       style={inlineStyles}
       data-testid="avatar-container"
+      onClick={onClick}
     >
       {avatarSrc ? (
         <img
@@ -43,7 +45,8 @@ Avatar.propTypes = {
   bgColor: PropTypes.string,
   textColor: PropTypes.string,
   size: PropTypes.number,
-  round: PropTypes.bool
+  round: PropTypes.bool,
+  onClick: PropTypes.func
 };
 
 export default Avatar;

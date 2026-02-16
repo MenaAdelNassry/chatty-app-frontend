@@ -1,0 +1,59 @@
+.people-skeleton-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 20px;
+
+    .skeleton-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        overflow: hidden;
+        height: 320px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        // 1. Cover
+        .skeleton-cover {
+            width: 100%;
+            height: 90px;
+            margin-bottom: 40px; // مسافة عشان الأفاتار
+
+            // لو بتستخدم CSS Pure
+            background-color: #eee;
+        }
+
+        // 2. Avatar Area
+        .skeleton-avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: -80px; // يركب فوق الكفر
+            gap: 10px;
+
+            .skeleton-avatar {
+                border: 4px solid white;
+                border-radius: 50%;
+                background-color: white; // خلفية عشان الحدود تبان
+            }
+        }
+
+        // 3. Stats
+        .skeleton-stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 20px 0;
+            margin-top: auto;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        // 4. Button
+        .skeleton-btn {
+            width: 100%;
+            padding: 15px;
+        }
+    }
+}

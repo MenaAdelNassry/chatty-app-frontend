@@ -1,0 +1,41 @@
+.posts-container {
+  min-height: 100vh; // عشان الـ scroll يشتغل حتى لو مفيش بوستات كتير
+  margin-top: 20px;
+
+  .new-posts-toast {
+    position: fixed; // ثابت في الشاشة
+    top: 80px; // تحت الهيدر بشوية
+    left: 50%;
+    transform: translateX(-50%); // في النص بالظبط
+    background-color: var(--primary-1); // اللون الأزرق بتاعك
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100; // فوق البوستات
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--primary-2); // لون أغمق سنة
+      transform: translateX(-50%) translateY(-2px); // حركة بسيطة لفوق
+    }
+
+    .arrow-icon {
+      font-size: 12px;
+    }
+  }
+
+  .no-posts-message {
+    text-align: center;
+    padding: 40px;
+    color: var(--gray-13);
+    font-size: 18px;
+    font-weight: 600;
+  }
+}

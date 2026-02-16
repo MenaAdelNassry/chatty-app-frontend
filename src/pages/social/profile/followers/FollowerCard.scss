@@ -1,0 +1,30 @@
+.follower-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s;
+
+    &:hover { transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+
+    .card-avatar { cursor: pointer; margin-bottom: 10px; }
+
+    .card-info {
+        margin-bottom: 15px;
+        h4 { margin: 0 0 5px; cursor: pointer; color: #1c1e21; font-size: 16px; &:hover { text-decoration: underline; } }
+        .count { font-size: 13px; color: #65676b; }
+    }
+
+    .card-actions {
+        width: 100%;
+        .view-profile-btn {
+            width: 100%; padding: 8px; border: none; border-radius: 6px;
+            background: #e4e6eb; color: #050505; font-weight: 600; cursor: pointer;
+            &:hover { background: #d8dadf; }
+        }
+    }
+}

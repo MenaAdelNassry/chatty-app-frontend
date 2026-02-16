@@ -1,0 +1,91 @@
+.giphy-container {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+
+  .giphy-search-input {
+    position: relative;
+    margin-bottom: 10px;
+
+    input {
+      width: 100%;
+      padding: 10px 35px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-4);
+      background: var(--white-4);
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-1);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-13);
+    }
+  }
+
+  .giphy-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); // 3 صور جنب بعض
+    gap: 5px;
+    padding-right: 5px;
+
+    &:has(.spinner-container) {
+      .spinner-container {
+        grid-column: 1 / -1; // ياخد كل الأعمدة
+      }
+    }
+
+    .giphy-item {
+      cursor: pointer;
+      height: 100px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  // 🔥 2. Empty State Style
+  .no-gifs-found {
+    flex-grow: 1; // تملأ المساحة الفاضية
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--gray-13); // لون رمادي
+
+    .icon {
+      font-size: 50px;
+      margin-bottom: 15px;
+      opacity: 0.5; // خفيفة شوية
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--gray-2);
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--gray-13);
+    }
+  }
+}

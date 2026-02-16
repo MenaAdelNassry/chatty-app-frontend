@@ -2,102 +2,95 @@ import '@pages/auth/login/Login.scss';
 import { FaArrowRight } from 'react-icons/fa';
 import Input from '@components/input/Input';
 import Button from '@components/button/Button';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ROUTES } from '@root/constants';
-import { useState } from 'react';
-import { authService } from '@services/api/auth/auth.service';
-import useLocalStorage from '@hooks/useLocalStorage';
-import { useDispatch } from 'react-redux';
-import { addUser } from '@redux/reducers/user/user.reducer';
+import useLogin from '@hooks/auth/useLogin';
+import { useEffect, useRef } from 'react';
+import GoogleLoginBtn from '@components/button/GoogleLoginBtn';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [alertType, setAlertType] = useState('');
+  const { values, errors, apiError, isLoading, handleChange, loginUser } =
+    useLogin();
 
-  const [setStoredUsername] = useLocalStorage("username", "set");
-  const [setLoggedIn] = useLocalStorage("keepLoggedIn", "set");
+  // refs
+  // fieldsRef.current = { email: inputElement, password: inputElement, ... }
+  const fieldsRef = useRef({});
 
-  const dispatch = useDispatch();
+  // Focus on mount
+  useEffect(() => {
+    if (fieldsRef.current.email) fieldsRef.current.email.focus();
+  }, []);
 
-  const navigate = useNavigate();
-
-  const loginUser = async (event) => {
+  const handleLoginSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
 
-    try {
-      const result = await authService.signIn({
-        username,
-        password,
-        keepLoggedIn
-      });
+    const validationErrors = await loginUser(event);
 
-      setStoredUsername(username);
-      setLoggedIn(keepLoggedIn);
+    if (validationErrors) {
+      const firstErrorKey = Object.keys(validationErrors)[0];
 
-      setAlertType('alert-success');
-      dispatch(addUser({ token: result.data.token, profile: result.data.user }));
-
-      navigate(ROUTES.SOCIAL_STREAMS);
-    } catch (error) {
-      setIsLoading(false);
-      setAlertType('alert-error');
-      setErrorMessage(error?.response?.data?.message);
+      if (firstErrorKey && fieldsRef.current[firstErrorKey]) {
+        fieldsRef.current[firstErrorKey].focus();
+      }
     }
   };
 
   return (
     <div className="auth-inner">
-      {errorMessage && (
-        <div className={`alerts ${alertType}`} role="alert">
-          {errorMessage}
+      {apiError && (
+        <div className="alerts alert-error" role="alert">
+          {apiError}
         </div>
       )}
 
-      <form className="auth-form" onSubmit={loginUser}>
+      <form className="auth-form" onSubmit={handleLoginSubmit}>
         <div className="form-input-container">
           <Input
-            id="username"
-            name="username"
+            ref={(el) => (fieldsRef.current['email'] = el)}
+            id="email"
+            name="email"
             type="text"
-            value={username}
-            labelText="Username"
-            placeholder="Enter Username"
-            style={{ border: `${errorMessage ? "1px solid #fa9b8a" : ""}` }}
-            handleChange={(e) => setUsername(e.target.value)}
+            value={values.email}
+            labelText="email"
+            placeholder="Enter Email"
+            errorMessage={errors.email}
+            handleChange={handleChange}
           />
           <Input
+            ref={(el) => (fieldsRef.current['password'] = el)}
             id="password"
             name="password"
             type="password"
-            value={password}
+            value={values.password}
             labelText="Password"
             placeholder="Enter Password"
-            style={{ border: `${errorMessage ? "1px solid #fa9b8a" : ""}` }}
-            handleChange={(e) => setPassword(e.target.value)}
+            errorMessage={errors.password}
+            handleChange={handleChange}
           />
+
           <label className="checkmark-container" htmlFor="checkbox">
             <Input
+              ref={(el) => (fieldsRef.current['checkbox'] = el)}
               id="checkbox"
-              name="checkbox"
+              name="keepLoggedIn"
               type="checkbox"
-              value={keepLoggedIn}
-              handleChange={(e) => setKeepLoggedIn(e.target.checked)}
+              value={values.keepLoggedIn}
+              handleChange={handleChange}
             />
             Keep me signed in
           </label>
         </div>
 
         <Button
-          label={`${isLoading ? 'SIGNIN IN PROGRESS...' : 'SIGNIN'}`}
+          label={isLoading ? 'SIGNIN IN PROGRESS...' : 'SIGNIN'}
           className="auth-button button"
-          disabled={!username || !password}
+          disabled={!values.email || !values.password || isLoading}
           type="submit"
         />
+
+        <div className="auth-separator">OR</div>
+
+        <GoogleLoginBtn />
 
         <Link to={ROUTES.FORGOT_PASSWORD}>
           <span className="forgot-password">

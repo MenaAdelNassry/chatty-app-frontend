@@ -1,0 +1,20 @@
+.followers-wrapper {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 300px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+
+    .tab-title { margin-top: 0; padding-bottom: 15px; border-bottom: 1px solid #eee; text-transform: capitalize; }
+
+    .followers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); // Responsive Grid
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .loading-state, .empty-state {
+        text-align: center; padding: 40px; color: #65676b; font-size: 16px;
+    }
+}

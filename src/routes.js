@@ -1,94 +1,147 @@
-import { Suspense, lazy } from "react";
-import { useRoutes } from "react-router-dom";
-import { AuthTabs, ForgotPassword, ResetPassword } from "@pages/auth";
+import { Suspense, lazy } from 'react';
+import { useRoutes } from 'react-router-dom';
+import { AuthTabs, ForgotPassword } from '@pages/auth';
 import { ROUTES } from '@root/constants/index';
-import ProtectedRoutes from "@pages/ProtectedRoutes";
-import Error from "@pages/error/Error";
-import Playground from "@components/Playground";
-import PageLoader from "@components/page-loader/PageLoader"
+import ProtectedRoutes from '@pages/ProtectedRoutes';
+import Error from '@pages/error/Error';
+import Playground from '@components/Playground';
+import PageLoader from '@components/page-loader/PageLoader';
+import VerifiedGuard from '@pages/VerifiedGuard';
+// import StreamsSkeleton from '@pages/social/streams/StreamsSkeleton';
+import NotificationSkeleton from '@pages/social/notifications/NotificationSkeleton';
+import SocialSkeleton from '@pages/social/SocialSkeleton';
 
-const Social = lazy(() => import("@pages/social/Social"));
-const Streams = lazy(() => import("@pages/social/streams/Streams"));
-const Chat = lazy(() => import("@pages/social/chat/Chat"));
-const Followers = lazy(() => import("@pages/social/followers/Followers"));
-const Following = lazy(() => import("@pages/social/following/Following"));
-const Notifications = lazy(() => import("@pages/social/notifications/Notifications"));
-const People = lazy(() => import("@pages/social/people/People"));
-const Photos = lazy(() => import("@pages/social/photos/Photos"));
-const Profile = lazy(() => import("@pages/social/profile/Profile"));
-const Videos = lazy(() => import("@pages/social/videos/Videos"));
+const Social = lazy(() => import('@pages/social/Social'));
+const Streams = lazy(() => import('@pages/social/streams/Streams'));
+const Chat = lazy(() => import('@pages/social/chat/Chat'));
+const Connections = lazy(() => import('@pages/social/connections/Connections'));
+const Notifications = lazy(() =>
+  import('@pages/social/notifications/Notifications')
+);
+const People = lazy(() => import('@pages/social/people/People'));
+const Photos = lazy(() => import('@pages/social/photos/Photos'));
+const Profile = lazy(() => import('@pages/social/profile/Profile'));
+const Videos = lazy(() => import('@pages/social/videos/Videos'));
+const VerifyEmail = lazy(() => import('@pages/auth/verifyEmail/verifyEmail'));
+const Settings = lazy(() => import('@pages/social/settings/Settings'));
+const Search = lazy(() => import('@pages/social/search/Search'));
 
 export const AppRouter = () => {
   const elements = useRoutes([
     {
       path: '/test',
-      element: <Playground />
+      element: <Playground />,
     },
     {
       path: ROUTES.AUTH,
-      element: <AuthTabs />
+      element: <AuthTabs />,
     },
     {
       path: ROUTES.FORGOT_PASSWORD,
-      element: <ForgotPassword />
+      element: <ForgotPassword />,
     },
     {
-      path: ROUTES.RESET_PASSWORD,
-      element: <ResetPassword />
+      path: ROUTES.VERIFY_EMAIL,
+      element: (
+        <ProtectedRoutes>
+          <Suspense fallback={<PageLoader />}>
+            <VerifyEmail />
+          </Suspense>
+        </ProtectedRoutes>
+      ),
     },
     {
       path: ROUTES.SOCIAL,
       element: (
         <ProtectedRoutes>
-          <Suspense fallback={<PageLoader />}>
-            <Social />
-          </Suspense>
+          <VerifiedGuard>
+            <Suspense fallback={<SocialSkeleton />}>
+              <Social />
+            </Suspense>
+          </VerifiedGuard>
         </ProtectedRoutes>
       ),
       children: [
         {
           path: ROUTES.SOCIAL_STREAMS,
-          element: <Streams />
+          element: (
+            // TODO we will put StreamsSkeleton after we build it
+            <Suspense fallback={<PageLoader />}>
+              <Streams />
+            </Suspense>
+          ),
         },
         {
           path: ROUTES.SOCIAL_CHAT_MESSAGES,
-          element: <Chat />
+          element: <Chat />,
         },
         {
-          path: ROUTES.SOCIAL_FOLLOWERS,
-          element: <Followers />
-        },
-        {
-          path: ROUTES.SOCIAL_FOLLOWING,
-          element: <Following />
+          path: ROUTES.SOCIAL_CONNECTIONS,
+          element: <Connections />,
         },
         {
           path: ROUTES.SOCIAL_NOTIFICATIONS,
-          element: <Notifications />
+          element: (
+            <Suspense fallback={<NotificationSkeleton />}>
+              <Notifications />
+            </Suspense>
+          ),
         },
         {
           path: ROUTES.SOCIAL_PEOPLE,
-          element: <People />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <People />
+            </Suspense>
+          ),
         },
         {
           path: ROUTES.SOCIAL_PHOTOS,
-          element: <Photos />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Photos />
+            </Suspense>
+          ),
         },
         {
           path: ROUTES.SOCIAL_PROFILE,
-          element: <Profile />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Profile />
+            </Suspense>
+          ),
         },
         {
           path: ROUTES.SOCIAL_VIDEOS,
-          element: <Videos />
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Videos />
+            </Suspense>
+          ),
         },
-      ]
+        {
+          path: ROUTES.SOCIAL_SETTINGS,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Settings />
+            </Suspense>
+          ),
+        },
+        {
+          path: ROUTES.SOCIAL_SEARCH,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Search />
+            </Suspense>
+          ),
+        },
+      ],
     },
     {
-      path: "*",
-      element: <Error />
-    }
+      path: '*',
+      element: <Error />,
+    },
   ]);
 
   return elements;
-}
+};

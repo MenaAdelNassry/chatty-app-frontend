@@ -1,12 +1,36 @@
+@import '@assets/scss/mixins.scss';
+
+.social-app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; // واخد طول الشاشة بالظبط
+  overflow: hidden; // ممنوع السكرول هنا
+}
+
 .dashboard {
   display: flex;
+  flex: 1; // السحر هنا: خد كل المساحة المتبقية بعد الهيدر (مهما كان طول الهيدر)
+  overflow: hidden; // عشان السكرول يبقى جوه العناصر مش بره
+
   &-sidebar {
-    flex: 2;
-    max-width: 15%;
+    // السايدبار ياخد عرضه، ولو طول يعمل سكرول لوحده
+    flex: 0 0 280px; // عرض ثابت
+    height: 100%;
+    overflow-y: auto;
+    border-right: 4px solid var(--white-2);
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   &-content {
-    flex: 6;
-    height: 100vh;
+    flex: 1; // ياخد باقي العرض
+    height: 100%;
+    overflow-y: auto; // ده بس اللي يعمل سكرول (feed area)
+    position: relative; // عشان الـ Loader يظهر جواه صح
+    padding: 0 15px;
+
+    @include custom-scrollbar;
   }
 }
