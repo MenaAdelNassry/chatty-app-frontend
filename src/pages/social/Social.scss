@@ -46,3 +46,11 @@
     z-index: 999;
   }
 }
+
+.mobile-sidebar-wrapper {
+  display: none; // مخفي تماماً في الديسكتوب
+
+  @media (max-width: 1024px) {
+    display: block;
+  }
+}

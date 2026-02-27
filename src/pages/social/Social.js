@@ -24,7 +24,9 @@ const Social = () => {
 
       <div className="dashboard">
 
-        <Sidebar isSidebarActive={isSidebarActive} />
+        <div className={`mobile-sidebar-wrapper ${isSidebarActive ? 'active' : ''}`}>
+          <Sidebar isSidebarActive={isSidebarActive} />
+        </div>
         {isSidebarActive && <div className="sidebar-overlay" onClick={() => dispatch(toggleSidebar(false))}></div>}
 
         <div className="dashboard-sidebar">
