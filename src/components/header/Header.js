@@ -1,5 +1,6 @@
 import logo from '@assets/images/logo.svg';
 import {
+  FaBars,
   FaCaretDown,
   FaCaretUp,
   FaRegBell,
@@ -19,7 +20,8 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import useDebounce from '@hooks/useDebounce';
 import { userService } from '@services/api/user/user.service';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleSidebar } from '@redux/reducers/user/user.reducer';
 
 const Header = () => {
   const {
@@ -45,6 +47,7 @@ const Header = () => {
   } = actions;
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // --- Search Logic Starts Here ---
   const [searchTerm, setSearchTerm] = useState('');
@@ -60,7 +63,6 @@ const Header = () => {
     const myUnread = convo.unreadCounts?.[profile?._id] || 0;
     return sum + myUnread;
   }, 0);
-  console.log(messageCount)
   const messageNotifications = conversations
     .filter((convo) => convo.lastMessage)
     .slice(0, 10);
@@ -75,6 +77,17 @@ const Header = () => {
 
     const url = `/app/social/chat/messages?id=${targetId}&cid=${convo._id}`;
     navigate(url);
+  };
+
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const searchInputRef = useRef(null); // ريف للتحكم في الفوكس
+
+  const toggleMobileSearch = () => {
+    setIsMobileSearchOpen(!isMobileSearchOpen);
+    // تأخير بسيط عشان نضمن إن الانبوت ظهر قبل ما نعمل فوكس
+    if (!isMobileSearchOpen) {
+      setTimeout(() => searchInputRef.current?.focus(), 100);
+    }
   };
 
   useEffect(() => {
@@ -145,6 +158,13 @@ const Header = () => {
           data-testid="header-image"
           onClick={onNavigateHome}
         >
+          <FaBars
+            className="mobile-menu-icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(toggleSidebar());
+            }}
+          />
           <img src={logo} alt="Chatty Logo" className="img-fluid" />
           <div className="app-name">
             Chatty
@@ -161,18 +181,22 @@ const Header = () => {
 
         {/* 2. Search Section */}
         {/* 🔥🔥 Search Section 🔥🔥 */}
-        <div className="header-search-wrapper" ref={searchRef}>
+        <div
+          className={`header-search-wrapper ${
+            isMobileSearchOpen ? 'open' : ''
+          }`}
+          ref={searchRef}
+        >
           <div className="search-bar">
-            <FaSearch className="search-icon" />
+            <FaSearch className="search-icon" onClick={toggleMobileSearch} />
             <input
+              ref={searchInputRef}
               type="text"
               className="search-input"
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={() => {
-                if (searchTerm) setShowSearchDropdown(true);
-              }}
+              onBlur={() => setIsMobileSearchOpen(false)}
             />
           </div>
 
@@ -216,131 +240,135 @@ const Header = () => {
         </div>
 
         {/* 3. Navigation Items */}
-        <ul className="header-nav">
-          {/* --- Notifications Icon --- */}
-          <li className="header-nav-item active-item" ref={notificationRef}>
-            <span
-              className="header-list-name"
-              onClick={() => toggleDropdown('notification')}
-            >
-              <FaRegBell className="header-list-icon" />
-              {unreadNotificationCount > 0 && (
-                <span
-                  className="bg-danger-dots"
-                  data-testid="notification-dots"
-                >{unreadNotificationCount}</span>
-              )}
-            </span>
-
-            {isNotificationActive && (
-              <ul className="dropdown-ul">
-                <li className="dropdown-li">
-                  <Dropdown
-                    height={300}
-                    style={{ right: '0' }} // SCSS handles relative positioning now
-                    title="Notifications"
-                    subTitle={unreadNotificationCount}
+        {!isMobileSearchOpen && (
+          <ul className="header-nav">
+            {/* --- Notifications Icon --- */}
+            <li className="header-nav-item active-item" ref={notificationRef}>
+              <span
+                className="header-list-name"
+                onClick={() => toggleDropdown('notification')}
+              >
+                <FaRegBell className="header-list-icon" />
+                {unreadNotificationCount > 0 && (
+                  <span
+                    className="bg-danger-dots"
+                    data-testid="notification-dots"
                   >
-                    {notifications.length > 0 ? (
-                      <div className="notifications-container">
-                        {notifications.map((notification) => (
-                          <NotificationPreview
-                            key={notification._id}
-                            notification={notification}
-                            onMarkAsRead={() => onMarkAsRead(notification)}
-                          />
-                        ))}
-                      </div>
-                    ) : (
-                      // Empty State Design
-                      <div className="empty-state">
-                        <FaRegBellSlash className="empty-icon" />
-                        <p className="empty-message">
-                          You have no notifications
-                        </p>
-                      </div>
-                    )}
-                  </Dropdown>
-                </li>
-              </ul>
-            )}
-          </li>
+                    {unreadNotificationCount}
+                  </span>
+                )}
+              </span>
 
-          {/* --- Messages Icon --- */}
-          <li className="header-nav-item active-item" ref={messageRef}>
-            <span
-              className="header-list-name"
-              onClick={() => toggleDropdown('messages')}
-            >
-              <FaRegEnvelope className="header-list-icon" />
-              {messageCount > 0 && (
-                <span className="bg-danger-dots" data-testid="messages-dots">
-                  {messageCount}
-                </span>
+              {isNotificationActive && (
+                <ul className="dropdown-ul">
+                  <li className="dropdown-li">
+                    <Dropdown
+                      height={300}
+                      style={{ right: '0' }} // SCSS handles relative positioning now
+                      title="Notifications"
+                      subTitle={unreadNotificationCount}
+                    >
+                      {notifications.length > 0 ? (
+                        <div className="notifications-container">
+                          {notifications.map((notification) => (
+                            <NotificationPreview
+                              key={notification._id}
+                              notification={notification}
+                              onMarkAsRead={() => onMarkAsRead(notification)}
+                            />
+                          ))}
+                        </div>
+                      ) : (
+                        // Empty State Design
+                        <div className="empty-state">
+                          <FaRegBellSlash className="empty-icon" />
+                          <p className="empty-message">
+                            You have no notifications
+                          </p>
+                        </div>
+                      )}
+                    </Dropdown>
+                  </li>
+                </ul>
               )}
-            </span>
+            </li>
 
-            {isMessageActive && (
-              <div className="dropdown-ul">
-                <MessageSidebar
-                  profile={profile}
-                  messageCount={messageCount}
-                  messageNotifications={messageNotifications}
-                  openChatPage={openChatPage}
+            {/* --- Messages Icon --- */}
+            <li className="header-nav-item active-item" ref={messageRef}>
+              <span
+                className="header-list-name"
+                onClick={() => toggleDropdown('messages')}
+              >
+                <FaRegEnvelope className="header-list-icon" />
+                {messageCount > 0 && (
+                  <span className="bg-danger-dots" data-testid="messages-dots">
+                    {messageCount}
+                  </span>
+                )}
+              </span>
+
+              {isMessageActive && (
+                <div className="dropdown-ul">
+                  <MessageSidebar
+                    profile={profile}
+                    messageCount={messageCount}
+                    messageNotifications={messageNotifications}
+                    openChatPage={openChatPage}
+                  />
+                </div>
+              )}
+            </li>
+
+            {/* --- Settings / Profile --- */}
+            <li className="header-nav-item" ref={settingsRef}>
+              <span
+                className="header-list-name profile-image"
+                onClick={() => toggleDropdown('settings')}
+              >
+                <Avatar
+                  name={profile?.username}
+                  bgColor={profile?.avatarColor}
+                  textColor="#ffffff"
+                  size={40}
+                  avatarSrc={profile?.profilePicture}
                 />
-              </div>
-            )}
-          </li>
+              </span>
+              <span
+                className="header-list-name profile-name"
+                onClick={() => toggleDropdown('settings')}
+              >
+                {profile?.username}
+                {isSettingsActive ? (
+                  <FaCaretUp className="caret" />
+                ) : (
+                  <FaCaretDown className="caret" />
+                )}
+              </span>
 
-          {/* --- Settings / Profile --- */}
-          <li className="header-nav-item" ref={settingsRef}>
-            <span
-              className="header-list-name profile-image"
-              onClick={() => toggleDropdown('settings')}
-            >
-              <Avatar
-                name={profile?.username}
-                bgColor={profile?.avatarColor}
-                textColor="#ffffff"
-                size={40}
-                avatarSrc={profile?.profilePicture}
-              />
-            </span>
-            <span
-              className="header-list-name profile-name"
-              onClick={() => toggleDropdown('settings')}
-            >
-              {profile?.username}
-              {isSettingsActive ? (
-                <FaCaretUp className="caret" />
-              ) : (
-                <FaCaretDown className="caret" />
+              {isSettingsActive && (
+                <ul className="dropdown-ul">
+                  <li className="dropdown-li">
+                    <Dropdown
+                      title="Settings"
+                      height={300}
+                      style={{ right: '0' }}
+                    >
+                      {settingsItems.map((item) => (
+                        <DropdownItem
+                          key={item.id}
+                          title={item.title}
+                          subTitle={item.subTitle}
+                          icon={item.icon}
+                          onClick={() => handleSettingsItemClick(item)}
+                        />
+                      ))}
+                    </Dropdown>
+                  </li>
+                </ul>
               )}
-            </span>
-
-            {isSettingsActive && (
-              <ul className="dropdown-ul">
-                <li className="dropdown-li">
-                  <Dropdown
-                    title="Settings"
-                    height={300}
-                    style={{ right: '0' }}
-                  >
-                    {settingsItems.map((item) => (
-                      <DropdownItem
-                        key={item.id}
-                        title={item.title}
-                        subTitle={item.subTitle}
-                        icon={item.icon}
-                        onClick={() => handleSettingsItemClick(item)}
-                      />
-                    ))}
-                  </Dropdown>
-                </li>
-              </ul>
-            )}
-          </li>
-        </ul>
+            </li>
+          </ul>
+        )}
       </div>
     </div>
   );

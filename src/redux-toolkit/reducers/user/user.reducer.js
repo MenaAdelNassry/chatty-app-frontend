@@ -16,6 +16,7 @@ const initialState = {
   profile: null,
   selectedUserProfile: null,
   isLoading: false,
+  isSidebarActive: false,
 };
 
 const userSlice = createSlice({
@@ -33,6 +34,10 @@ const userSlice = createSlice({
     },
     updateUserProfile: (state, action) => {
       state.profile = action.payload;
+    },
+    toggleSidebar: (state, action) => {
+      state.isSidebarActive =
+        action.payload !== undefined ? action.payload : !state.isSidebarActive;
     },
   },
   extraReducers: (builder) => {
@@ -144,6 +149,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { addUser, clearUser, updateUserProfile } = userSlice.actions;
+export const { addUser, clearUser, updateUserProfile, toggleSidebar } = userSlice.actions;
 
 export default userSlice.reducer;
