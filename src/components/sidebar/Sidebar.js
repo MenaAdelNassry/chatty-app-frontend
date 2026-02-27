@@ -3,13 +3,15 @@ import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "@components/sidebar/Sidebar.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "@redux/reducers/user/user.reducer";
 
-const Sidebar = () => {
+const Sidebar = ({ isSidebarActive }) => {
   const { profile } = useSelector((state) => state.user);
 
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const checkUrl = useCallback((name) => {
     return location.pathname.includes(name.toLowerCase());
@@ -20,11 +22,13 @@ const Sidebar = () => {
       url = `${url}/${profile.username}/${profile?._id}`
     }
 
+    dispatch(toggleSidebar(false));
     navigate(url);
   }
+  console.log(isSidebarActive)
 
   return (
-    <div className="app-side-menu">
+    <div className={`app-side-menu ${isSidebarActive ? 'sidebar-open' : ''}`}>
       <div className="side-menu">
         <ul className="list-unstyled">
           {sideBarItems.map((data) => (

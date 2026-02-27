@@ -14,6 +14,21 @@
   height: 100%;
   @include custom-scrollbar(4px);
 
+  @media (max-width: 1024px) {
+    position: fixed; // يخرج من الـ Layout خالص ومياخدش مساحة
+    left: -280px;    // يستخبى جهة الشمال
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease-in-out;
+    background-color: var(--white-1);
+
+    &.sidebar-open {
+      left: 0; // يظهر لما ندوس على الزرار
+    }
+  }
+
   .side-menu {
     padding: 20px 10px;
 
